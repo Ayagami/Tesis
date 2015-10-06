@@ -20,13 +20,22 @@ public class PlayerAttributes : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		CheckIfINeedToDie ();
+		//CheckIfINeedToDie ();
 
 	}
 
 	void CheckIfINeedToDie(){
 		if (health <= 0) {
-			Debug.Log("Die");
+		    //	Debug.Log("Die");
+
+            /*
+                Reviso si tengo que deshabilitar componentes... Que obviamente debo hacer. xD!
+             *  Posibilidad de usar sendMessage();
+             */
+
+            //GetComponentInChildren<CamaraJugador>().enabled = false;
+            SendMessage("onDieMessage");
+            this.gameObject.SetActive(false);
 		}
 	}
 
@@ -45,5 +54,6 @@ public class PlayerAttributes : NetworkBehaviour {
 		if (health <= 0)
 			health = 0;
 		SetHealthText();
+        CheckIfINeedToDie();
 	}
 }

@@ -236,7 +236,12 @@ public class CharacterControllerLogic : MonoBehaviour
 	
 	
 	#region Methods
-	
+
+    public void onDieMessage()
+    {
+        this.enabled = false;
+    }
+
 	public bool IsInJump()
 	{
 		//return (IsInIdleJump() || IsInLocomotionJump());

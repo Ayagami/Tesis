@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.Networking;
 
+using System.Collections.Generic;
+
 public class Player_Shoot : NetworkBehaviour {
 
 	public GameObject bulletPrefab;
@@ -10,6 +12,8 @@ public class Player_Shoot : NetworkBehaviour {
 	public float cooldownToShoot = 1f;
 
 	private float currentCooldown = 0f;
+
+    //private List<>
 	// Use this for initialization
 	void Start () {
 	
@@ -46,13 +50,14 @@ public class Player_Shoot : NetworkBehaviour {
 
 	[Command]
 	void CmdTellToServerWhereIShoot (string ID, Vector3 tPos, Vector3 tRot) {
-		//GameObject pref = Resources.Load ("Bullet.prefab") as GameObject;
-		//Debug.Log (pref);
-		Debug.Log (bulletPrefab);
-		Debug.Log (tPos);
 		GameObject go = Instantiate (bulletPrefab, tPos, Quaternion.Euler (tRot) ) as GameObject;
 		go.GetComponent<Zombie_ID> ().zombieID = ID;
 		NetworkServer.Spawn (go);
 	}
+
+    public void onDieMessage()
+    {
+        this.enabled = false;
+    }
 
 }

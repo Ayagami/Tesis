@@ -10,6 +10,8 @@ public class Player_NetworkSetup : NetworkBehaviour {
 	public GameObject Prefab;
 
 	public Transform myTrans;
+
+    private CamaraJugador CameraInstance;
 	// Use this for initialization
 	public override void OnStartLocalPlayer ()
 	{
@@ -23,6 +25,7 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 		CamaraJugador cg = GetComponentInChildren<CamaraJugador> ();
 		cg.enabled = true;
+        CameraInstance = cg;
 
 		ccl.gamecam = cg;
 
@@ -53,5 +56,11 @@ public class Player_NetworkSetup : NetworkBehaviour {
 	{
 		GetComponent<NetworkAnimator>().SetParameterAutoSend(0, true);
 	}
+
+    public void onDieMessage()
+    {
+        this.CameraInstance.enabled = false;
+    }
+
 
 }
