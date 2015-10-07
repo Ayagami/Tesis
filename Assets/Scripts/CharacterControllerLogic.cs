@@ -156,7 +156,7 @@ public class CharacterControllerLogic : MonoBehaviour
 			direction = 0f;	
 			float charSpeed = 0f;
 		
-			Vector3 resultantVelocity = transform.forward * leftY * 5f + transform.right * leftX * 5f + Physics.gravity;
+			Vector3 resultantVelocity = transform.forward * leftY * 5f + transform.right * leftX * 5f;
 
 			float animSpeed = Mathf.Abs ( leftY );
 
