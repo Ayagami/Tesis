@@ -148,13 +148,15 @@ public class CharacterControllerLogic : MonoBehaviour
 			
 			// Pull values from controller/keyboard
 			leftX = Input.GetAxis("Horizontal");
-			leftY = Input.GetAxis("Vertical");			
-			
+			leftY = Input.GetAxis("Vertical");	
+			//float leftZ = Input.GetKeyDown(KeyCode.Space) == true ? 1 : 0;
+			float leftZ = 0;
+
 			charAngle = 0f;
 			direction = 0f;	
 			float charSpeed = 0f;
 		
-			Vector3 resultantVelocity = transform.forward * leftY * 5f + transform.right * leftX * 5f;
+			Vector3 resultantVelocity = transform.forward * leftY * 5f + transform.right * leftX * 5f + transform.up * leftZ * 5f;
 
 			float animSpeed = Mathf.Abs ( leftY );
 

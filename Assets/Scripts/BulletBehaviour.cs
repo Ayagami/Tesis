@@ -7,6 +7,9 @@ public class BulletBehaviour : NetworkBehaviour {
 	public int bulletDamage = 10;
 	public float timeThatCanBeAlive = 4f;
 	private float timeAlive = 0f;
+
+	public SpellTypes projectileType = SpellTypes.NULL;
+
 	// Use this for initialization
 	void Start () {
 		Rigidbody rb = this.GetComponent<Rigidbody> ();

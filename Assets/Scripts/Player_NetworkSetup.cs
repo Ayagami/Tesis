@@ -59,7 +59,8 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
     public void onDieMessage()
     {
-        this.CameraInstance.enabled = false;
+		if(isLocalPlayer)
+       		 this.CameraInstance.enabled = false;
     }
 
 
