@@ -17,7 +17,7 @@ public class BulletBehaviour : NetworkBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected virtual void Update () {
 		timeAlive += Time.deltaTime;
 		if (timeAlive >= timeThatCanBeAlive)
 			Destroy (gameObject);

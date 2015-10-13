@@ -19,6 +19,7 @@ public class Player_Shoot : NetworkBehaviour {
 
 	private int maxSpells = 4;
 
+
 	// Use this for initialization
 	void Start () {
 		currentSpells = new List<SpellTypes>();
@@ -95,19 +96,30 @@ public class Player_Shoot : NetworkBehaviour {
 
 	IEnumerator Shoot() {
 
-		for (int i=0; i < currentSpells.Count; i++) {
-			string id = "Bullet from " + transform.name + bulletID;
-			bulletID++;
-			CmdTellToServerWhereIShoot (id, shootTransform.position, shootTransform.rotation.eulerAngles, (int) currentSpells[i], (int) CurrentTypeSpell );
+        if (currentSpells.Count <= 0)
+            yield return false;
 
-			yield return new WaitForSeconds(0.3f);
-		}
+        if (CurrentTypeSpell == SpellTypes.SHIELD)
+        {
+            string id = "Bullet from " + transform.name + bulletID;
+            bulletID++;
+            CmdTellToServerWhereIShoot(id, transform.position, transform.rotation.eulerAngles, (int)currentSpells[0], (int)CurrentTypeSpell, transform.name);
+        }
+        else
+        {
+            for (int i = 0; i < currentSpells.Count; i++)
+            {
+                string id = "Bullet from " + transform.name + bulletID;
+                bulletID++;
+                CmdTellToServerWhereIShoot(id, shootTransform.position, shootTransform.rotation.eulerAngles, (int)currentSpells[i], (int)CurrentTypeSpell, transform.name);
 
-		cleanSpells ();
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
 	}
 
 	[Command]
-	void CmdTellToServerWhereIShoot (string ID, Vector3 tPos, Vector3 tRot, int spell, int type) {
+	void CmdTellToServerWhereIShoot (string ID, Vector3 tPos, Vector3 tRot, int spell, int type, string who) {
 
 		SpellTypes parsedSpell = (SpellTypes) spell;
 		SpellTypes parsedType =  (SpellTypes)type;
@@ -118,6 +130,11 @@ public class Player_Shoot : NetworkBehaviour {
 		go.GetComponent<Zombie_ID> ().zombieID = ID;
 		NetworkServer.Spawn (go);
 
+        if ((SpellTypes)type == SpellTypes.SHIELD)
+        {
+            GameObject parent = GameObject.Find(who) as GameObject;
+            go.GetComponent<ShieldBehaviour>().target = parent.transform;
+        }
 	}
 
     public void onDieMessage()
