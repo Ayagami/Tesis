@@ -49,8 +49,10 @@ public class ProjectileScript : MonoBehaviour {
 		foreach (GameObject trail in trailParticles)
 		{
 			GameObject curTrail = transform.Find(projectileParticle.name + "/" + trail.name).gameObject;
+			if(curTrail){
 			curTrail.transform.parent = null;
-			Destroy(curTrail, 3f); 
+			Destroy(curTrail, 3f); 	
+			}
 		}
 		Destroy(projectileParticle, 3f);
 		Destroy(impactParticle, 5f);
