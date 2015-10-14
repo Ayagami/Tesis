@@ -17,6 +17,20 @@ public class SpellManager : MonoBehaviour {
 		FSM.setCombination ((int)SpellTypes.FIRE1, (int)SpellTypes.FIRE1, (int)SpellTypes.FIRE2);
 
 
+
+		FSM.setCombination ((int)SpellTypes.WATER, (int)SpellTypes.WATER, (int)SpellTypes.WATER1);
+		FSM.setCombination ((int)SpellTypes.WATER, (int)SpellTypes.WATER1, (int)SpellTypes.WATER2);
+		FSM.setCombination ((int)SpellTypes.WATER1, (int)SpellTypes.WATER1, (int)SpellTypes.WATER2);
+
+		FSM.setCombination ((int)SpellTypes.ROCK, (int)SpellTypes.ROCK, (int)SpellTypes.ROCK1);
+		FSM.setCombination ((int)SpellTypes.ROCK, (int)SpellTypes.ROCK1, (int)SpellTypes.ROCK2);
+		FSM.setCombination ((int)SpellTypes.ROCK1, (int)SpellTypes.ROCK1, (int)SpellTypes.ROCK2);
+
+		FSM.setCombination ((int)SpellTypes.AIR, (int)SpellTypes.AIR, (int)SpellTypes.AIR1);
+		FSM.setCombination ((int)SpellTypes.AIR, (int)SpellTypes.AIR1, (int)SpellTypes.AIR2);
+		FSM.setCombination ((int)SpellTypes.AIR1, (int)SpellTypes.AIR1, (int)SpellTypes.AIR2);
+
+
     }
 
 	public SpellTypes Combination(SpellTypes spell1, SpellTypes spell2){
@@ -59,6 +73,69 @@ public class SpellManager : MonoBehaviour {
 					return Prefabs[2];
 				break;
 			}
+
+			case SpellTypes.WATER : {
+				if(Type == SpellTypes.SHIELD)
+					return Prefabs[13];
+				
+				if(Type == SpellTypes.THROW)
+					return Prefabs[5];
+				break;
+			}
+
+			case SpellTypes.WATER2:
+
+			case SpellTypes.WATER1 : {
+				if(Type == SpellTypes.SHIELD)
+					return Prefabs[13];
+				
+				if(Type == SpellTypes.THROW)
+					return Prefabs[10];
+				break;
+			}
+
+
+			case SpellTypes.ROCK : {
+				if(Type == SpellTypes.SHIELD)
+					return Prefabs[12];
+				
+				if(Type == SpellTypes.THROW)
+					return Prefabs[6];
+				break;
+			}
+				
+			case SpellTypes.ROCK2:
+				
+			case SpellTypes.ROCK1 : {
+				if(Type == SpellTypes.SHIELD)
+					return Prefabs[12];
+				
+				if(Type == SpellTypes.THROW)
+					return Prefabs[9];
+				break;
+			}
+
+			case SpellTypes.AIR : {
+				if(Type == SpellTypes.SHIELD)
+					return Prefabs[11];
+				
+				if(Type == SpellTypes.THROW)
+					return Prefabs[8];
+				break;
+			}
+				
+			case SpellTypes.AIR2:
+				
+			case SpellTypes.AIR1 : {
+				if(Type == SpellTypes.SHIELD)
+					return Prefabs[11];
+				
+				if(Type == SpellTypes.THROW)
+					return Prefabs[7];
+				break;
+			}
+
+
 		}
 
 		return null;
@@ -74,15 +151,23 @@ public enum SpellTypes
     FIRE = 0,
 	FIRE1,
 	FIRE2,
-    WATER,
+
+	WATER,
 	WATER1,
 	WATER2,
+
     ROCK,
 	ROCK1,
 	ROCK2,
+
     DARK,
 	DARK1,
 	DARK2,
+
+	AIR,
+	AIR1,
+	AIR2,
+
 	SHIELD,
 	THROW,
 	Count,

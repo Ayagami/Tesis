@@ -56,6 +56,18 @@ public class Player_Shoot : NetworkBehaviour {
 			addSpell(SpellTypes.FIRE);
 		}
 
+		if (Input.GetKeyDown (KeyCode.Alpha2)) {
+			addSpell(SpellTypes.WATER);
+		}
+
+		if (Input.GetKeyDown (KeyCode.Alpha3)) {
+			addSpell(SpellTypes.ROCK);
+		}
+
+		if (Input.GetKeyDown (KeyCode.Alpha4)) {
+			addSpell(SpellTypes.AIR);
+		}
+
 		if(currentCooldown>=cooldownToShoot && Input.GetKeyDown(KeyCode.Mouse0)) {
 			StartCoroutine(Shoot());
 			currentCooldown = 0f;
