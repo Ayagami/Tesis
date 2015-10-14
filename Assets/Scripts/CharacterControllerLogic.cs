@@ -49,10 +49,14 @@ public class CharacterControllerLogic : MonoBehaviour
 	private float jumpMultiplier = 1f;
 	[SerializeField]
 	private CapsuleCollider capCollider;
-	[SerializeField]
-	private float jumpDist = 1f;
-	
-	
+    [SerializeField]
+    private float jumpForce = 100f;
+
+    public Transform jumpRay= null;
+	private float jumpDist  = 0.1f;
+    
+
+
 	// Private global only
 	private float leftX = 0f;
 	private float leftY = 0f;
@@ -67,6 +71,7 @@ public class CharacterControllerLogic : MonoBehaviour
 	private float capsuleHeight;	
 
 	private Rigidbody rb3d;
+    private Bounds CapsuleBound;
 	
 	// Hashes
   /*  private int m_LocomotionId = 0;
@@ -110,6 +115,7 @@ public class CharacterControllerLogic : MonoBehaviour
 	{
 		animator = GetComponent<Animator>();
 		capCollider = GetComponent<CapsuleCollider>();
+        CapsuleBound = capCollider.bounds;
 		capsuleHeight = capCollider.height;
 		rb3d = this.GetComponent<Rigidbody> ();
 		/*
@@ -156,14 +162,30 @@ public class CharacterControllerLogic : MonoBehaviour
 			direction = 0f;	
 			float charSpeed = 0f;
 		
-			Vector3 resultantVelocity = transform.forward * leftY * 10f + transform.right * leftX * 10f;
+			/*Vector3 resultantVelocity = transform.forward * leftY * 10f + transform.right * leftX * 10f;
 			resultantVelocity.y = Physics.gravity.y;
+            
 
 			float animSpeed = Mathf.Abs ( leftY );
 
 			animator.SetFloat("Speed", animSpeed);
 
-			rb3d.velocity = resultantVelocity;
+			rb3d.velocity = resultantVelocity;*/
+
+            float animSpeed = Mathf.Abs(leftY);
+
+            animator.SetFloat("Speed", animSpeed);
+
+            rb3d.AddForce( (transform.forward * leftY * 20f + transform.right * leftX * 20f));
+
+            Vector3 finalVelocity = rb3d.velocity;
+
+            if ( Mathf.Abs(finalVelocity.x) > 10f)
+                finalVelocity.x = finalVelocity.x < 0 ? -10 : 10;
+            if ( Mathf.Abs(finalVelocity.z) > 10f)
+                finalVelocity.z = finalVelocity.z < 0 ? -10 : 10;
+
+            rb3d.velocity = finalVelocity;
 
 			// Translate controls stick coordinates into world/cam/character space
             StickToWorldspace(this.transform, gamecam.transform, ref direction, ref charSpeed, ref charAngle, IsInPivot());		
@@ -202,7 +224,14 @@ public class CharacterControllerLogic : MonoBehaviour
 	/// Any code that moves the character needs to be checked against physics
 	/// </summary>
 	void FixedUpdate()
-	{							
+	{
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            RaycastHit hit;
+            if (Physics.Raycast(jumpRay.position, -Vector3.up, out hit, jumpDist)) {
+                rb3d.AddRelativeForce(0, jumpForce, 0);
+            }
+        }
+	
 		// Rotate character model if stick is tilted right or left, but only if character is moving in that direction
 		if (IsInLocomotion() && gamecam.CamState != CamaraJugador.CamStates.Free && !IsInPivot() && ((direction >= 0 && leftX >= 0) || (direction < 0 && leftX < 0)))
 		{
