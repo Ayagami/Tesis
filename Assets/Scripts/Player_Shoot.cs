@@ -19,6 +19,7 @@ public class Player_Shoot : NetworkBehaviour {
 
 	private int maxSpells = 4;
 
+	private bool isShooting = false;
 
 	// Use this for initialization
 	void Start () {
@@ -26,51 +27,68 @@ public class Player_Shoot : NetworkBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () 
-	{
+	void Update () {
+		CheckInputs ();
 		CheckIfShooting();
 	}
 
-	void CheckIfShooting()
-	{
-		if(!isLocalPlayer)
-		{
+	void CheckIfShooting() {
+		if(!isLocalPlayer) {
 			return;
 		}
 
 		currentCooldown += Time.deltaTime;
-
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			cleanSpells();
 		}
 
+		if(currentCooldown>=cooldownToShoot && Input.GetKeyDown(KeyCode.Mouse0) && !isShooting) {
+			StartCoroutine(Shoot());
+			currentCooldown = 0f;
+		}
+	}
+
+	private void CheckInputs(){
+		if (!isLocalPlayer)
+			return;
+
+		CheckSpellTypeChanges ();
+		CheckAddSpell ();
+	}
+
+	private void CheckSpellTypeChanges(){
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			setTypeSpell(SpellTypes.SHIELD);
 		}
-
+		
 		if (Input.GetKeyDown (KeyCode.E)) {
 			setTypeSpell(SpellTypes.THROW);
 		}
+		
+		if (Input.GetKeyDown (KeyCode.Tab)) {
+			setTypeSpell(SpellTypes.RAY);
+		}
+		
+		if (Input.GetKeyDown (KeyCode.R)) {
+			setTypeSpell(SpellTypes.DROP);
+		}
+	}
 
+	private void CheckAddSpell(){
 		if (Input.GetKeyDown (KeyCode.Alpha1)) {
 			addSpell(SpellTypes.FIRE);
 		}
-
+		
 		if (Input.GetKeyDown (KeyCode.Alpha2)) {
 			addSpell(SpellTypes.WATER);
 		}
-
+		
 		if (Input.GetKeyDown (KeyCode.Alpha3)) {
 			addSpell(SpellTypes.ROCK);
 		}
-
+		
 		if (Input.GetKeyDown (KeyCode.Alpha4)) {
 			addSpell(SpellTypes.AIR);
-		}
-
-		if(currentCooldown>=cooldownToShoot && Input.GetKeyDown(KeyCode.Mouse0)) {
-			StartCoroutine(Shoot());
-			currentCooldown = 0f;
 		}
 	}
 
@@ -103,31 +121,40 @@ public class Player_Shoot : NetworkBehaviour {
 	}
 
 	void setTypeSpell(SpellTypes type){
+		if (type == CurrentTypeSpell || isShooting)
+			return;
+
+		Debug.Log ("SWITCHING TO " + type);
+		cleanSpells ();
+
 		CurrentTypeSpell = type;
 	}
 
 	IEnumerator Shoot() {
-
+		isShooting = true;
         if (currentSpells.Count <= 0)
             yield return false;
 
-        if (CurrentTypeSpell == SpellTypes.SHIELD)
-        {
-            string id = "Bullet from " + transform.name + bulletID;
-            bulletID++;
-            CmdTellToServerWhereIShoot(id, transform.position, transform.rotation.eulerAngles, (int)currentSpells[0], (int)CurrentTypeSpell, transform.name);
-        }
-        else
-        {
-            for (int i = 0; i < currentSpells.Count; i++)
-            {
-                string id = "Bullet from " + transform.name + bulletID;
-                bulletID++;
-                CmdTellToServerWhereIShoot(id, shootTransform.position, shootTransform.rotation.eulerAngles, (int)currentSpells[i], (int)CurrentTypeSpell, transform.name);
-
-                yield return new WaitForSeconds(0.3f);
-            }
-        }
+		switch (CurrentTypeSpell) {
+			case SpellTypes.SHIELD:
+				string id = "Bullet from " + transform.name + bulletID;
+				bulletID++;
+				if(currentSpells.Count > 0)
+					CmdTellToServerWhereIShoot(id, transform.position, transform.rotation.eulerAngles, (int)currentSpells[0], (int)CurrentTypeSpell, transform.name);
+				break;
+			case SpellTypes.THROW:
+				for (int i = 0; i < currentSpells.Count; i++) {
+					string idT = "Bullet from " + transform.name + bulletID;
+					bulletID++;
+					CmdTellToServerWhereIShoot(idT, shootTransform.position, shootTransform.rotation.eulerAngles, (int)currentSpells[i], (int)CurrentTypeSpell, transform.name);
+					yield return new WaitForSeconds(0.3f);
+				}
+				break;
+			default:
+				Debug.LogError("SPELL NOT IMPLEMENTED!");
+				break;
+		}
+		isShooting = false;
 	}
 
 	[Command]
@@ -142,15 +169,14 @@ public class Player_Shoot : NetworkBehaviour {
 		go.GetComponent<Zombie_ID> ().zombieID = ID;
 		NetworkServer.Spawn (go);
 
-        if ((SpellTypes)type == SpellTypes.SHIELD)
-        {
+
+        if ((SpellTypes)type == SpellTypes.SHIELD) {
             GameObject parent = GameObject.Find(who) as GameObject;
             go.GetComponent<ShieldBehaviour>().target = parent.transform;
         }
 	}
 
-    public void onDieMessage()
-    {
+    public void onDieMessage() {
         this.enabled = false;
     }
 

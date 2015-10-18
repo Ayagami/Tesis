@@ -170,6 +170,9 @@ public enum SpellTypes
 
 	SHIELD,
 	THROW,
+	RAY,
+	DROP,
+	
 	Count,
 	NULL
 }
@@ -187,9 +190,12 @@ public class FSkillMachine{
 		}
 	}
 
-	public void setCombination(int Source, int Combinable, int Result){
+	public void setCombination(int Source, int Combinable, int Result, int SResult = -1){
 		fsm [Source, Combinable] = Result;
-		fsm [Combinable, Source] = Result;
+		if (SResult == -1)
+			fsm [Combinable, Source] = Result;
+		else
+			fsm [Combinable, Source] = SResult;
 	}
 
 	public int getCombination (int Source, int Combinable){
