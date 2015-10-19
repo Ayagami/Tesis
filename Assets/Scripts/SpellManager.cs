@@ -60,9 +60,9 @@ public class SpellManager : MonoBehaviour {
 		FSM.setCombination ((int)SpellTypes.LIGHT1, (int)SpellTypes.WATER1, (int)SpellTypes.LIFE1);
 		FSM.setCombination ((int)SpellTypes.LIGHT2, (int)SpellTypes.WATER2, (int)SpellTypes.LIFE2);
 
-		FSM.setCombination ((int)SpellTypes.LIGHT,  (int)SpellTypes.ROCK,  (int)SpellTypes.SHADOW);
-		FSM.setCombination ((int)SpellTypes.LIGHT1, (int)SpellTypes.ROCK1, (int)SpellTypes.SHADOW1);
-		FSM.setCombination ((int)SpellTypes.LIGHT2, (int)SpellTypes.ROCK2, (int)SpellTypes.SHADOW2);
+		FSM.setCombination ((int)SpellTypes.ARCANE,  (int)SpellTypes.ROCK,  (int)SpellTypes.SHADOW);
+		FSM.setCombination ((int)SpellTypes.ARCANE1, (int)SpellTypes.ROCK1, (int)SpellTypes.SHADOW1);
+		FSM.setCombination ((int)SpellTypes.ARCANE2, (int)SpellTypes.ROCK2, (int)SpellTypes.SHADOW2);
 
 		FSM.setCombination ((int)SpellTypes.LIGHT,  (int)SpellTypes.AIR,  (int)SpellTypes.ARCANE);
 		FSM.setCombination ((int)SpellTypes.LIGHT1, (int)SpellTypes.AIR1, (int)SpellTypes.ARCANE1);
