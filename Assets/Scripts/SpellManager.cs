@@ -16,8 +16,6 @@ public class SpellManager : MonoBehaviour {
 		FSM.setCombination ((int)SpellTypes.FIRE, (int)SpellTypes.FIRE1, (int)SpellTypes.FIRE2);
 		FSM.setCombination ((int)SpellTypes.FIRE1, (int)SpellTypes.FIRE1, (int)SpellTypes.FIRE2);
 
-
-
 		FSM.setCombination ((int)SpellTypes.WATER, (int)SpellTypes.WATER, (int)SpellTypes.WATER1);
 		FSM.setCombination ((int)SpellTypes.WATER, (int)SpellTypes.WATER1, (int)SpellTypes.WATER2);
 		FSM.setCombination ((int)SpellTypes.WATER1, (int)SpellTypes.WATER1, (int)SpellTypes.WATER2);
@@ -30,6 +28,49 @@ public class SpellManager : MonoBehaviour {
 		FSM.setCombination ((int)SpellTypes.AIR, (int)SpellTypes.AIR1, (int)SpellTypes.AIR2);
 		FSM.setCombination ((int)SpellTypes.AIR1, (int)SpellTypes.AIR1, (int)SpellTypes.AIR2);
 
+		FSM.setCombination ((int)SpellTypes.LIGHT, (int)SpellTypes.LIGHT, (int)SpellTypes.LIGHT1);
+		FSM.setCombination ((int)SpellTypes.LIGHT, (int)SpellTypes.LIGHT1, (int)SpellTypes.LIGHT2);
+		FSM.setCombination ((int)SpellTypes.LIGHT1, (int)SpellTypes.LIGHT1, (int)SpellTypes.LIGHT2);
+
+		FSM.setCombination ((int)SpellTypes.SHADOW, (int)SpellTypes.SHADOW, (int)SpellTypes.SHADOW1);
+		FSM.setCombination ((int)SpellTypes.SHADOW, (int)SpellTypes.SHADOW1, (int)SpellTypes.SHADOW2);
+		FSM.setCombination ((int)SpellTypes.SHADOW1, (int)SpellTypes.SHADOW1, (int)SpellTypes.SHADOW2);
+
+		FSM.setCombination ((int)SpellTypes.ARCANE, (int)SpellTypes.ARCANE, (int)SpellTypes.ARCANE1);
+		FSM.setCombination ((int)SpellTypes.ARCANE, (int)SpellTypes.ARCANE1, (int)SpellTypes.ARCANE2);
+		FSM.setCombination ((int)SpellTypes.ARCANE1, (int)SpellTypes.ARCANE1, (int)SpellTypes.ARCANE2);
+
+		FSM.setCombination ((int)SpellTypes.FROST, (int)SpellTypes.FROST, (int)SpellTypes.FROST1);
+		FSM.setCombination ((int)SpellTypes.FROST, (int)SpellTypes.FROST1, (int)SpellTypes.FROST2);
+		FSM.setCombination ((int)SpellTypes.FROST1, (int)SpellTypes.FROST2, (int)SpellTypes.FROST2);
+
+		FSM.setCombination ((int)SpellTypes.LIGHTNING, (int)SpellTypes.LIGHTNING, (int)SpellTypes.LIGHTNING1);
+		FSM.setCombination ((int)SpellTypes.LIGHTNING, (int)SpellTypes.LIGHTNING1, (int)SpellTypes.LIGHTNING2);
+		FSM.setCombination ((int)SpellTypes.LIGHTNING1, (int)SpellTypes.LIGHTNING1, (int)SpellTypes.LIGHTNING2);
+
+		FSM.setCombination ((int)SpellTypes.LIFE, (int)SpellTypes.LIFE, (int)SpellTypes.LIFE1);
+		FSM.setCombination ((int)SpellTypes.LIFE, (int)SpellTypes.LIFE1, (int)SpellTypes.LIFE2);
+		FSM.setCombination ((int)SpellTypes.LIFE1, (int)SpellTypes.LIFE1, (int)SpellTypes.LIFE2);
+
+		FSM.setCombination ((int)SpellTypes.AIR,  (int)SpellTypes.WATER,  (int)SpellTypes.FROST);
+		FSM.setCombination ((int)SpellTypes.AIR1, (int)SpellTypes.WATER1, (int)SpellTypes.FROST1);
+		FSM.setCombination ((int)SpellTypes.AIR2, (int)SpellTypes.WATER2, (int)SpellTypes.FROST2);
+
+		FSM.setCombination ((int)SpellTypes.LIGHT,  (int)SpellTypes.WATER,  (int)SpellTypes.LIFE);
+		FSM.setCombination ((int)SpellTypes.LIGHT1, (int)SpellTypes.WATER1, (int)SpellTypes.LIFE1);
+		FSM.setCombination ((int)SpellTypes.LIGHT2, (int)SpellTypes.WATER2, (int)SpellTypes.LIFE2);
+
+		FSM.setCombination ((int)SpellTypes.LIGHT,  (int)SpellTypes.ROCK,  (int)SpellTypes.SHADOW);
+		FSM.setCombination ((int)SpellTypes.LIGHT1, (int)SpellTypes.ROCK1, (int)SpellTypes.SHADOW1);
+		FSM.setCombination ((int)SpellTypes.LIGHT2, (int)SpellTypes.ROCK2, (int)SpellTypes.SHADOW2);
+
+		FSM.setCombination ((int)SpellTypes.LIGHT,  (int)SpellTypes.AIR,  (int)SpellTypes.ARCANE);
+		FSM.setCombination ((int)SpellTypes.LIGHT1, (int)SpellTypes.AIR1, (int)SpellTypes.ARCANE1);
+		FSM.setCombination ((int)SpellTypes.LIGHT2, (int)SpellTypes.AIR2, (int)SpellTypes.ARCANE2);
+
+		FSM.setCombination ((int)SpellTypes.ARCANE,  (int)SpellTypes.FIRE,  (int)SpellTypes.LIGHTNING);
+		FSM.setCombination ((int)SpellTypes.ARCANE1, (int)SpellTypes.FIRE1, (int)SpellTypes.LIGHTNING1);
+		FSM.setCombination ((int)SpellTypes.ARCANE2, (int)SpellTypes.FIRE2, (int)SpellTypes.LIGHTNING2);
 
     }
 
@@ -167,6 +208,30 @@ public enum SpellTypes
 	AIR,
 	AIR1,
 	AIR2,
+
+	LIGHT,
+	LIGHT1,
+	LIGHT2,
+
+	SHADOW,
+	SHADOW1,
+	SHADOW2,
+
+	ARCANE,
+	ARCANE1,
+	ARCANE2,
+
+	FROST,
+	FROST1,
+	FROST2,
+
+	LIGHTNING,
+	LIGHTNING1,
+	LIGHTNING2,
+
+	LIFE,
+	LIFE1,
+	LIFE2,
 
 	SHIELD,
 	THROW,

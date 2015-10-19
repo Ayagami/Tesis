@@ -90,6 +90,10 @@ public class Player_Shoot : NetworkBehaviour {
 		if (Input.GetKeyDown (KeyCode.Alpha4)) {
 			addSpell(SpellTypes.AIR);
 		}
+
+		if (Input.GetKeyDown (KeyCode.Alpha5)) {
+			addSpell(SpellTypes.LIGHT);
+		}
 	}
 
 	private void addSpell(SpellTypes spell){
