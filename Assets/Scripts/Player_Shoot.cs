@@ -171,7 +171,14 @@ public class Player_Shoot : NetworkBehaviour {
                     }
                 }
                 break;
-
+            case SpellTypes.RAY:
+                if (currentSpells.Count > 0)
+                {
+                    string idR = "Bullet from " + transform.name + bulletID;
+                    bulletID++;
+                    CmdTellToServerWhereIShoot(idR, shootTransform.position, shootTransform.rotation.eulerAngles, (int)currentSpells[0], (int)CurrentTypeSpell, transform.name);
+                }
+                break;
 			default:
 				Debug.LogError("SPELL NOT IMPLEMENTED!");
 				break;
@@ -192,7 +199,7 @@ public class Player_Shoot : NetworkBehaviour {
 		NetworkServer.Spawn (go);
 
 
-        if ((SpellTypes)type == SpellTypes.SHIELD) {
+        if ((SpellTypes)type == SpellTypes.SHIELD || (SpellTypes)type == SpellTypes.RAY) {
             GameObject parent = GameObject.Find(who) as GameObject;
             go.GetComponent<ShieldBehaviour>().target = parent.transform;
         }

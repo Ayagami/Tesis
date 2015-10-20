@@ -95,6 +95,9 @@ public class SpellManager : MonoBehaviour {
 				if(Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[0];
 
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[14];
+
 				break;
 			}
 

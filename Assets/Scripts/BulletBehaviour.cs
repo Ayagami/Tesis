@@ -36,7 +36,7 @@ public class BulletBehaviour : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdTellServerWhoWasShot (string uniqueID, int dmg) {
+    void CmdTellServerWhoWasShot (string uniqueID, int dmg) {
 		GameObject go = GameObject.Find(uniqueID);
 		go.GetComponent<PlayerAttributes>().TakeDamage(dmg);
 	}

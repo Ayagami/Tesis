@@ -12,7 +12,7 @@ public class ShieldBehaviour : BulletBehaviour {
         currentShieldHealth = bulletDamage;
 	}
 
-    void Update()
+    virtual protected void Update()
     {
         base.Update();
         if (target == null)
