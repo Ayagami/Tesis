@@ -107,6 +107,9 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[1];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[14];
 				break;
 			}
 
@@ -116,6 +119,9 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[2];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[14];
 				break;
 			}
 
@@ -125,6 +131,9 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[5];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[20];
 				break;
 			}
 
@@ -136,6 +145,9 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[10];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[20];
 				break;
 			}
 
@@ -146,6 +158,9 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[6];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[21];
 				break;
 			}
 				
@@ -157,6 +172,9 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[9];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[21];
 				break;
 			}
 
@@ -166,6 +184,9 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[8];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[18];
 				break;
 			}
 				
@@ -177,10 +198,184 @@ public class SpellManager : MonoBehaviour {
 
                 if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[7];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[18];
 				break;
 			}
 
+            case SpellTypes.ARCANE: {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[27];
 
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[24];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[28];
+                    break;
+            }
+
+            case SpellTypes.ARCANE1:  {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[27];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[25];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[28];
+                    break;
+            }
+
+            case SpellTypes.ARCANE2: {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[27];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[26];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[28];
+                    break;
+            }
+
+            case SpellTypes.LIGHT:
+
+            case SpellTypes.LIGHT1:
+                {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[30];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[31];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[29];
+                    break;
+                }
+
+            case SpellTypes.LIGHT2:
+                {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[30];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[33];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[29];
+                    break;
+                }
+
+            case SpellTypes.LIGHTNING:
+                {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[36];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[33];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[37];
+                    break;
+                }
+
+            case SpellTypes.LIGHTNING1:
+                {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[36];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[34];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[37];
+                    break;
+                }
+
+            case SpellTypes.LIGHTNING2:
+                {
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[36];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[35];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[37];
+                    break;
+                }
+            case SpellTypes.LIFE:
+            case SpellTypes.LIFE1:{
+                    if (Type == SpellTypes.SHIELD)
+                        return Prefabs[39];
+
+                    if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                        return Prefabs[40];
+
+                    if (Type == SpellTypes.RAY)
+                        return Prefabs[38];
+                    break;
+           }
+            case SpellTypes.LIFE2: {
+                if (Type == SpellTypes.SHIELD)
+                    return Prefabs[39];
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                    return Prefabs[41];
+
+                if (Type == SpellTypes.RAY)
+                    return Prefabs[38];
+                break;
+            }
+
+             case SpellTypes.SHADOW:
+             case SpellTypes.SHADOW1: {
+                     if (Type == SpellTypes.SHIELD)
+                         return Prefabs[45];
+
+                     if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                         return Prefabs[42];
+
+                     if (Type == SpellTypes.RAY)
+                         return Prefabs[44];
+                     break;
+                 }
+             case SpellTypes.SHADOW2: {
+                     if (Type == SpellTypes.SHIELD)
+                         return Prefabs[45];
+
+                     if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                         return Prefabs[43];
+
+                     if (Type == SpellTypes.RAY)
+                         return Prefabs[44];
+                     break;
+           }
+             case SpellTypes.FROST:
+             case SpellTypes.FROST1: {
+                     if (Type == SpellTypes.SHIELD)
+                         return Prefabs[46];
+
+                     if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                         return Prefabs[48];
+
+                     if (Type == SpellTypes.RAY)
+                         return Prefabs[47];
+                     break;
+            }
+             case SpellTypes.FROST2: {
+                     if (Type == SpellTypes.SHIELD)
+                         return Prefabs[46];
+
+                     if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
+                         return Prefabs[49];
+
+                     if (Type == SpellTypes.RAY)
+                         return Prefabs[47];
+                     break;
+            }
 		}
 
 		return null;

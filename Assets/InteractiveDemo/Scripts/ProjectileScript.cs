@@ -43,7 +43,8 @@ public class ProjectileScript : MonoBehaviour {
 	}*/
 
 	void OnTriggerEnter(Collider hit){
-		impactParticle = Instantiate(impactParticle, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
+        if(impactParticle)
+		    impactParticle = Instantiate(impactParticle, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
 		
 		//yield WaitForSeconds (0.05);
 		foreach (GameObject trail in trailParticles)

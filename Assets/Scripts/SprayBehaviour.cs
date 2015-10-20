@@ -16,7 +16,6 @@ public class SprayBehaviour : ShieldBehaviour {
 
         auxTime += Time.deltaTime;
         if (auxTime >= applyDamageWhen) {
-            Debug.Log("Appling Damage" + Time.time);
             for (int i = 0; i < objects.Count; i++) {
                 objects[i].TakeDamage(bulletDamage);
             }

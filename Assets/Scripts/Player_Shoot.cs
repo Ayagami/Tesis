@@ -164,9 +164,10 @@ public class Player_Shoot : NetworkBehaviour {
                     Vector3 Rotation = new Vector3(90, 0, 0);
 
                     for (int i = 0; i < currentSpells.Count; i++) {
+                        Vector3 randomSpawnPos = spawn + new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f));
                         string idD = "Bullet from " + transform.name + bulletID;
                         bulletID++;
-                        CmdTellToServerWhereIShoot(idD, spawn, Rotation, (int)currentSpells[i], (int)CurrentTypeSpell, transform.name);
+                        CmdTellToServerWhereIShoot(idD, randomSpawnPos, Rotation, (int)currentSpells[i], (int)CurrentTypeSpell, transform.name);
                         yield return new WaitForSeconds(0.3f);
                     }
                 }
