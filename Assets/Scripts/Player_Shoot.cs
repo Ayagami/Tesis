@@ -114,6 +114,7 @@ public class Player_Shoot : NetworkBehaviour {
 				currentSpells.RemoveAt(index);
 				currentSpells.RemoveAt(index);
 				currentSpells.Insert(index, result);
+                index = 0;
 			} else {
 				index++;
 			}
@@ -154,6 +155,23 @@ public class Player_Shoot : NetworkBehaviour {
 					yield return new WaitForSeconds(0.3f);
 				}
 				break;
+            case SpellTypes.DROP:
+                RaycastHit hit;
+                if (Physics.Raycast(shootTransform.position, shootTransform.forward, out hit, 100f) && currentSpells.Count > 0) {
+                    Vector3 spawn = hit.point;
+                    spawn.y += 10f;
+
+                    Vector3 Rotation = new Vector3(90, 0, 0);
+
+                    for (int i = 0; i < currentSpells.Count; i++) {
+                        string idD = "Bullet from " + transform.name + bulletID;
+                        bulletID++;
+                        CmdTellToServerWhereIShoot(idD, spawn, Rotation, (int)currentSpells[i], (int)CurrentTypeSpell, transform.name);
+                        yield return new WaitForSeconds(0.3f);
+                    }
+                }
+                break;
+
 			default:
 				Debug.LogError("SPELL NOT IMPLEMENTED!");
 				break;

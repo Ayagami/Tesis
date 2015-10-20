@@ -92,16 +92,17 @@ public class SpellManager : MonoBehaviour {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[3];
 
-				if(Type == SpellTypes.THROW)
+				if(Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[0];
+
 				break;
 			}
 
 			case SpellTypes.FIRE1 : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[3];
-					
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[1];
 				break;
 			}
@@ -109,8 +110,8 @@ public class SpellManager : MonoBehaviour {
 			case SpellTypes.FIRE2 : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[3];
-					
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[2];
 				break;
 			}
@@ -118,8 +119,8 @@ public class SpellManager : MonoBehaviour {
 			case SpellTypes.WATER : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[13];
-				
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[5];
 				break;
 			}
@@ -129,8 +130,8 @@ public class SpellManager : MonoBehaviour {
 			case SpellTypes.WATER1 : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[13];
-				
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[10];
 				break;
 			}
@@ -139,8 +140,8 @@ public class SpellManager : MonoBehaviour {
 			case SpellTypes.ROCK : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[12];
-				
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[6];
 				break;
 			}
@@ -150,8 +151,8 @@ public class SpellManager : MonoBehaviour {
 			case SpellTypes.ROCK1 : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[12];
-				
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[9];
 				break;
 			}
@@ -159,8 +160,8 @@ public class SpellManager : MonoBehaviour {
 			case SpellTypes.AIR : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[11];
-				
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[8];
 				break;
 			}
@@ -170,8 +171,8 @@ public class SpellManager : MonoBehaviour {
 			case SpellTypes.AIR1 : {
 				if(Type == SpellTypes.SHIELD)
 					return Prefabs[11];
-				
-				if(Type == SpellTypes.THROW)
+
+                if (Type == SpellTypes.THROW || Type == SpellTypes.DROP)
 					return Prefabs[7];
 				break;
 			}
