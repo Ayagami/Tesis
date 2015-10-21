@@ -35,7 +35,8 @@ public class PlayerAttributes : NetworkBehaviour {
 
             SendMessage("onDieMessage");
 			CmdTellToServerPlayerDies(this.name, (int) GameManager_References.GameType.NORMAL);
-			GameManager_References.instance.YouDie.SetActive(true);
+            if(isLocalPlayer)
+			    GameManager_References.instance.YouDie.SetActive(true);
             this.gameObject.SetActive(false);
 		}
 	}

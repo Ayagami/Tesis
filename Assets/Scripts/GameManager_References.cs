@@ -25,13 +25,11 @@ public class GameManager_References : NetworkBehaviour {
 
 	void Start(){
 		Players = new List<GameObject> ();
-		Time.timeScale = 1;
 	}
 
 	void Update(){
 			if(!isEnabled){
 				GameObject[] P = GameObject.FindGameObjectsWithTag("Player");
-				Debug.Log(P.Length);
 				foreach(GameObject player in P){
 					Players.Add(player);
 				}
@@ -42,7 +40,6 @@ public class GameManager_References : NetworkBehaviour {
 			if(WhoWon.name == localPlayer){
 				YouWin.SetActive(true);
 			}
-			this.enabled = false;
 		}
 
 			
@@ -63,7 +60,6 @@ public class GameManager_References : NetworkBehaviour {
 	void CheckWinCondition(int GType){
 		if (Players.Count > 0 && Players.Count <= 1) {
 			WhoWon = Players[0];
-			Time.timeScale = 0;
 		}
 	}
 
