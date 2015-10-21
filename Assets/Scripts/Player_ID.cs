@@ -45,6 +45,7 @@ public class Player_ID : NetworkBehaviour {
 		else
 		{
 			myTransform.name = MakeUniqueIdentity();
+			GameManager_References.setPlayer(myTransform.name);
 		}
 	}
 

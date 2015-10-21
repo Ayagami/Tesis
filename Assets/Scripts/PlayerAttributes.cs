@@ -34,8 +34,15 @@ public class PlayerAttributes : NetworkBehaviour {
              */
 
             SendMessage("onDieMessage");
+			CmdTellToServerPlayerDies(this.name, (int) GameManager_References.GameType.NORMAL);
+			GameManager_References.instance.YouDie.SetActive(true);
             this.gameObject.SetActive(false);
 		}
+	}
+
+	[Command]
+	public void CmdTellToServerPlayerDies(string playerName, int GType){
+		GameManager_References.instance.PlayerDies (playerName, GType);
 	}
 
 	void SetHealthText() {

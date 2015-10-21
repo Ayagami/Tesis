@@ -25,7 +25,7 @@ public class Player_Respawn : NetworkBehaviour {
 	{
 		if(isLocalPlayer)
 		{
-			respawnButton = GameObject.Find("GameManager").GetComponent<GameManager_References>().respawnButton;
+			//respawnButton = GameObject.Find("GameManager").GetComponent<GameManager_References>().respawnButton;
 			respawnButton.GetComponent<Button>().onClick.AddListener(CommenceRespawn);
 			respawnButton.SetActive(false);
 		}
