@@ -25,6 +25,7 @@ public class GameManager_References : NetworkBehaviour {
 
 	void Start(){
 		Players = new List<GameObject> ();
+		Time.timeScale = 1;
 	}
 
 	void Update(){
@@ -39,6 +40,7 @@ public class GameManager_References : NetworkBehaviour {
 		if (WhoWon != null) {
 			if(WhoWon.name == localPlayer){
 				YouWin.SetActive(true);
+				//Time.timeScale = 0;
 			}
 		}
 
