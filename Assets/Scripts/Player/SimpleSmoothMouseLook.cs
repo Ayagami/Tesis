@@ -19,7 +19,8 @@ public class SimpleSmoothMouseLook : MonoBehaviour {
 
 	public Transform aim;
 	public Collider ignoreCollider;
-	
+
+
 	void Start() {
 		// Set target direction to the camera's initial orientation.
 		targetDirection = transform.localRotation.eulerAngles;
@@ -31,6 +32,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour {
 
 	void OnDisable(){	// Setting the Aim to forward by default.
 		aim.forward = ignoreCollider.transform.forward;
+
 	}
 
 	void Update() {
