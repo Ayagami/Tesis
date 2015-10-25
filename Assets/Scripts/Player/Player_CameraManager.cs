@@ -27,7 +27,7 @@ public class Player_CameraManager : MonoBehaviour {
 	}
 
 	void Update(){
-		if (Input.GetKeyDown (KeyCode.P)) {
+		if (Input.GetMouseButtonDown(2)) {
 			if(!ShouldChange){
 				ChangeState( currentState == CameraState.CAMERA_MOVEMENT ? CameraState.CAMERA_SHOOTING : CameraState.CAMERA_MOVEMENT);
 			}
@@ -49,17 +49,6 @@ public class Player_CameraManager : MonoBehaviour {
 					ShouldChange = false;
 				}
 			}else{
-
-				/*transform.position = Vector3.Lerp(transform.position, prevStateBeforeChange - PlayerTarget.position, Time.deltaTime * 10f);
-				transform.rotation = Quaternion.Lerp(transform.rotation, prevRotBeforeChange, Time.deltaTime * 30f);
-
-				if( (transform.position - (prevStateBeforeChange - PlayerTarget.position)).magnitude < 0.3f ) {
-					transform.position = prevStateBeforeChange - PlayerTarget.position;
-					transform.rotation = prevRotBeforeChange;
-					
-					CJ.enabled = true;
-					ShouldChange = false;
-				}*/
 				CJ.enabled = true;
 				ShouldChange = false;
 			}

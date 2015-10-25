@@ -17,7 +17,8 @@ public class Player_Shoot : NetworkBehaviour {
 
 	private SpellTypes CurrentTypeSpell = SpellTypes.THROW;
 
-	private int maxSpells = 4;
+	[SerializeField]
+	private int maxSpells = 5;
 
 	private bool isShooting = false;
 
@@ -104,6 +105,7 @@ public class Player_Shoot : NetworkBehaviour {
 		currentSpells.Add (spell);
 
 		if (currentSpells.Count == 1) {
+			SkillGUIManager.Singleton.UpdateGraphics (currentSpells);
 			return;
 		}
 
@@ -119,10 +121,13 @@ public class Player_Shoot : NetworkBehaviour {
 				index++;
 			}
 		}
+
+		SkillGUIManager.Singleton.UpdateGraphics (currentSpells);
 	}
 
 	void cleanSpells(){
 		currentSpells.Clear ();
+		SkillGUIManager.Singleton.UpdateGraphics (currentSpells);
 	}
 
 	void setTypeSpell(SpellTypes type){

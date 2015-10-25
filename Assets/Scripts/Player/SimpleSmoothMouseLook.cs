@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 
-// Very simple smooth mouselook modifier for the MainCamera in Unity
-// by Francis R. Griffiths-Keam - www.runningdimensions.com
-
 [AddComponentMenu("Camera/Simple Smooth Mouse Look ")]
-public class SimpleSmoothMouseLook : MonoBehaviour
-{
+public class SimpleSmoothMouseLook : MonoBehaviour {
 	Vector2 _mouseAbsolute;
 	Vector2 _smoothMouse;
 	
@@ -24,8 +20,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 	public Transform aim;
 	public Collider ignoreCollider;
 	
-	void Start()
-	{
+	void Start() {
 		// Set target direction to the camera's initial orientation.
 		targetDirection = transform.localRotation.eulerAngles;
 		
@@ -33,9 +28,12 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 		if (characterBody) targetCharacterDirection = characterBody.transform.localRotation.eulerAngles;
 
 	}
-	
-	void Update()
-	{
+
+	void OnDisable(){	// Setting the Aim to forward by default.
+		aim.forward = ignoreCollider.transform.forward;
+	}
+
+	void Update() {
 		// Ensure the cursor is always locked when set
 		Screen.lockCursor = lockCursor;
 		
@@ -70,14 +68,11 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 		transform.localRotation *= targetOrientation;
 		
 		// If there's a character body that acts as a parent to the camera
-		if (characterBody)
-		{
-			var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, characterBody.transform.up);
+		if (characterBody) {
+			var yRotation = Quaternion.AngleAxis (_mouseAbsolute.x, characterBody.transform.up);
 			characterBody.transform.localRotation = yRotation;
 			characterBody.transform.localRotation *= targetCharacterOrientation;
-		}
-		else
-		{
+		} else {
 			var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, transform.InverseTransformDirection(Vector3.up));
 			transform.localRotation *= yRotation;
 		}
@@ -94,7 +89,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 		
 		for (int i = 0; i < hits.Length; i++) {
 			RaycastHit hit = hits[i];
-			if(hit.collider != ignoreCollider){
+			if(hit.collider != ignoreCollider) {
 				aim.LookAt (hit.point);
 				break;
 			}
