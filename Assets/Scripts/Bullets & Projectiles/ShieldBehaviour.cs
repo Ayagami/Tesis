@@ -7,6 +7,8 @@ public class ShieldBehaviour : BulletBehaviour {
     private float currentShieldHealth;
 
     [SyncVar] public Transform target = null;
+
+
 	// Use this for initialization
 	void Start () {
         currentShieldHealth = bulletDamage;
@@ -22,6 +24,7 @@ public class ShieldBehaviour : BulletBehaviour {
             transform.parent = target;
         }
     }
+
 
     void OnTriggerEnter(Collider obj)
     {

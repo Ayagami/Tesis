@@ -7,6 +7,7 @@ public class SprayBehaviour : ShieldBehaviour {
 
     private float auxTime = 0;
     public float applyDamageWhen = 0.1f;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -22,6 +23,8 @@ public class SprayBehaviour : ShieldBehaviour {
             auxTime = 0;
         }
     }
+
+
 
     void OnTriggerEnter(Collider o) {
         PlayerAttributes PA = o.GetComponent<PlayerAttributes>();
