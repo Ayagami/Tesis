@@ -24,6 +24,8 @@ public class SkillGUIManager : MonoBehaviour {
 	}
 	 */
 
+	public Image AimGraphic = null;
+
 	void Awake(){
 		Singleton = this;
 		DisableGraphic ();

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 [AddComponentMenu("Camera/Simple Smooth Mouse Look ")]
 public class SimpleSmoothMouseLook : MonoBehaviour {
@@ -23,11 +24,6 @@ public class SimpleSmoothMouseLook : MonoBehaviour {
 	[Header("Shaders Settings")]
 	public MonoBehaviour TiltShift;
 
-	/*
-	void Start() {
-		OnMyInit ();
-	}*/
-
 	void OnMyInit(){
 		// Set target direction to the camera's initial orientation.
 		targetDirection = transform.localRotation.eulerAngles;
@@ -37,7 +33,10 @@ public class SimpleSmoothMouseLook : MonoBehaviour {
 			targetCharacterDirection = characterBody.transform.localRotation.eulerAngles;
 	}
 	void OnEnable(){
-		TiltShift.enabled = true;
+		if(TiltShift)
+			TiltShift.enabled = true;
+		if (SkillGUIManager.Singleton.AimGraphic)
+			SkillGUIManager.Singleton.AimGraphic.enabled = true;
 		OnMyInit ();
 	}
 
@@ -45,7 +44,9 @@ public class SimpleSmoothMouseLook : MonoBehaviour {
 		if(ignoreCollider)
 			aim.forward = ignoreCollider.transform.forward;
 		if(TiltShift)
-		TiltShift.enabled = false;
+			TiltShift.enabled = false;
+		if (SkillGUIManager.Singleton.AimGraphic)
+			SkillGUIManager.Singleton.AimGraphic.enabled = false;
 	}
 
 	void Update() {
