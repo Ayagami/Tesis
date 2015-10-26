@@ -20,19 +20,32 @@ public class SimpleSmoothMouseLook : MonoBehaviour {
 	public Transform aim;
 	public Collider ignoreCollider;
 
+	[Header("Shaders Settings")]
+	public MonoBehaviour TiltShift;
 
+	/*
 	void Start() {
+		OnMyInit ();
+	}*/
+
+	void OnMyInit(){
 		// Set target direction to the camera's initial orientation.
 		targetDirection = transform.localRotation.eulerAngles;
 		
 		// Set target direction for the character body to its inital state.
-		if (characterBody) targetCharacterDirection = characterBody.transform.localRotation.eulerAngles;
-
+		if (characterBody) 
+			targetCharacterDirection = characterBody.transform.localRotation.eulerAngles;
+	}
+	void OnEnable(){
+		TiltShift.enabled = true;
+		OnMyInit ();
 	}
 
 	void OnDisable(){	// Setting the Aim to forward by default.
-		aim.forward = ignoreCollider.transform.forward;
-
+		if(ignoreCollider)
+			aim.forward = ignoreCollider.transform.forward;
+		if(TiltShift)
+		TiltShift.enabled = false;
 	}
 
 	void Update() {
