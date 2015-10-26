@@ -105,6 +105,8 @@ public class SimpleSmoothMouseLook : MonoBehaviour {
 		for (int i = 0; i < hits.Length; i++) {
 			RaycastHit hit = hits[i];
 			if(hit.collider != ignoreCollider) {
+				if( (ignoreCollider.transform.position - hit.point).magnitude > 1f)
+					ignoreCollider.transform.LookAt( new Vector3 (hit.point.x, ignoreCollider.transform.position.y, hit.point.z) );
 				aim.LookAt (hit.point);
 				break;
 			}
