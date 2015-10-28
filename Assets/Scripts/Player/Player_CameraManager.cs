@@ -8,11 +8,6 @@ public class Player_CameraManager : MonoBehaviour {
 
 	public CameraState currentState = CameraState.CAMERA_MOVEMENT;
 
-	[SerializeField]
-	private Vector3 prevStateBeforeChange = Vector3.zero;
-	[SerializeField]
-	private Quaternion prevRotBeforeChange = Quaternion.identity;
-
 
 	private bool ShouldChange = false;
 
@@ -38,12 +33,12 @@ public class Player_CameraManager : MonoBehaviour {
 	void FixedUpdate () {
 		if (ShouldChange) {
 			if(currentState == CameraState.CAMERA_SHOOTING){
-				transform.position = Vector3.Lerp(transform.position, SSL.WhereShouldBe.position, Time.deltaTime * 10f);
-				transform.rotation = Quaternion.Lerp(transform.rotation, SSL.WhereShouldBe.rotation, Time.deltaTime * 30f);
+				transform.position = Vector3.Lerp(transform.position, SSL.WhereShouldBe.position, Time.deltaTime * 30f);
+				//transform.rotation = Quaternion.Lerp(transform.rotation, SSL.WhereShouldBe.rotation, Time.deltaTime * 30f);
 
-				if( (transform.position - SSL.WhereShouldBe.transform.position).magnitude < 0.3f ) {
+				if( (transform.position - SSL.WhereShouldBe.transform.position).magnitude < 0.4f ) {
 					transform.position = SSL.WhereShouldBe.transform.position;
-					transform.rotation = SSL.WhereShouldBe.transform.rotation;
+					//transform.rotation = SSL.WhereShouldBe.transform.rotation;
 
 					SSL.enabled = true;
 					ShouldChange = false;
@@ -64,8 +59,6 @@ public class Player_CameraManager : MonoBehaviour {
 			break;
 		case CameraState.CAMERA_SHOOTING:
 			CJ.enabled = false;
-			prevStateBeforeChange = PlayerTarget.position + transform.position;
-			prevRotBeforeChange  = transform.rotation;
 			ShouldChange = true;
 			break;
 		default:
