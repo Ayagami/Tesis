@@ -49,10 +49,12 @@ public class ProjectileScript : MonoBehaviour {
 		//yield WaitForSeconds (0.05);
 		foreach (GameObject trail in trailParticles)
 		{
-			GameObject curTrail = transform.Find(projectileParticle.name + "/" + trail.name).gameObject;
-			if(curTrail){
-			curTrail.transform.parent = null;
-			Destroy(curTrail, 3f); 	
+			if(trail && projectileParticle && transform){
+				/*GameObject curTrail = transform.Find(projectileParticle.name + "/" + trail.name).gameObject;
+				if(curTrail){
+				curTrail.transform.parent = null;
+				Destroy(curTrail, 3f); 	
+				}*/
 			}
 		}
 		Destroy(projectileParticle, 3f);

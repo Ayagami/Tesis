@@ -34,11 +34,11 @@ public class Player_CameraManager : MonoBehaviour {
 		if (ShouldChange) {
 			if(currentState == CameraState.CAMERA_SHOOTING){
 				transform.position = Vector3.Lerp(transform.position, SSL.WhereShouldBe.position, Time.deltaTime * 30f);
-				//transform.rotation = Quaternion.Lerp(transform.rotation, SSL.WhereShouldBe.rotation, Time.deltaTime * 30f);
+				transform.rotation = Quaternion.Lerp(transform.rotation, SSL.WhereShouldBe.rotation, Time.deltaTime * 30f);
 
 				if( (transform.position - SSL.WhereShouldBe.transform.position).magnitude < 0.4f ) {
 					transform.position = SSL.WhereShouldBe.transform.position;
-					//transform.rotation = SSL.WhereShouldBe.transform.rotation;
+					transform.rotation = SSL.WhereShouldBe.transform.rotation;
 
 					SSL.enabled = true;
 					ShouldChange = false;
