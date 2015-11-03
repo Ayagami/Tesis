@@ -1,8 +1,9 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class ExitToLobbyHooks : MonoBehaviour
+public class ExitToLobbyHooks : NetworkBehaviour
 {
 	public delegate void CanvasHook();
 

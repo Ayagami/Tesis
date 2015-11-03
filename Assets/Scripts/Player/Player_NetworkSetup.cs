@@ -13,12 +13,10 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
     private CamaraJugador CameraInstance;
 	// Use this for initialization
-	public override void OnStartLocalPlayer ()
-	{
+	public override void OnStartLocalPlayer () {
 		if (isLocalPlayer) {
 			GameObject.Find ("Scene Camera").SetActive (false);
-			//GetComponent<CharacterController>().enabled = true;
-			//GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().enabled = true;
+
 			CharacterControllerLogic ccl = GetComponent<CharacterControllerLogic> ();
 			ccl.enabled = true;
 
@@ -35,39 +33,40 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 			AudioListener AL = GetComponentInChildren<AudioListener> ();
 			AL.enabled = true;
-
-
-
-
-			//FPSCharacterCam.enabled = true;
-			//audioListener.enabled = true;
-
-			/*GameObject Pref = Instantiate (Prefab, transform.position - (transform.forward * 10f), transform.rotation) as GameObject;
-		CamaraJugador cJ = Prefab.GetComponent<CamaraJugador> ();
-		cJ.CameraTarget = myTrans;
-		*/
-			//GetComponent<CharacterControllerLogic> ().gamecam = cJ;
-
-
-			/*Renderer[] rens = GetComponentsInChildren<Renderer>();
-		foreach(Renderer ren in rens)
-		{
-			ren.enabled = false;
-		}*/
 		}
 		GetComponent<NetworkAnimator> ().SetParameterAutoSend (0, true);
 	}
 
-	public override void PreStartClient ()
-	{
+	public override void PreStartClient () {
 		GetComponent<NetworkAnimator>().SetParameterAutoSend(0, true);
 	}
 
-    public void onDieMessage()
-    {
+    public void onDieMessage() {
 		if(isLocalPlayer)
        		 this.CameraInstance.enabled = false;
     }
 
+	[Command]
+	void CmdLobby() { /*This code only runs on Server! So... we need to log-out the user.*/
+		var lobby = NetworkLobbyManager.singleton as NetworkLobbyManager;
+		if (lobby) {
+			NetworkManager.singleton.ServerChangeScene(lobby.lobbyScene);
+			NetworkManager.singleton.StopHost();
+		}
+	}
 
+	void Local(){
+
+	}
+
+	[ClientCallback]
+	void OnGUI() {
+		if (!isLocalPlayer) {
+			return;
+		}
+
+		if (GUI.Button(new Rect(360, 30, 100, 20), "Exit")) {
+				CmdLobby();
+		}
+	}
 }

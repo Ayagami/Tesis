@@ -9,7 +9,7 @@ public class GuiLobbyManager : NetworkLobbyManager
 	public LobbyCanvasControl lobbyCanvas;
 	public OfflineCanvasControl offlineCanvas;
 	public OnlineCanvasControl onlineCanvas;
-	public ExitToLobbyCanvasControl exitToLobbyCanvas;
+	//public ExitToLobbyCanvasControl exitToLobbyCanvas;
 	public ConnectingCanvasControl connectingCanvas;
 	public PopupCanvasControl popupCanvas;
 	public MatchMakerCanvasControl matchMakerCanvas;
@@ -29,7 +29,7 @@ public class GuiLobbyManager : NetworkLobbyManager
 		if (lobbyCanvas != null) lobbyCanvas.OnLevelWasLoaded();
 		if (offlineCanvas != null) offlineCanvas.OnLevelWasLoaded();
 		if (onlineCanvas != null) onlineCanvas.OnLevelWasLoaded();
-		if (exitToLobbyCanvas != null) exitToLobbyCanvas.OnLevelWasLoaded();
+		//if (exitToLobbyCanvas != null) exitToLobbyCanvas.OnLevelWasLoaded();
 		if (connectingCanvas != null) connectingCanvas.OnLevelWasLoaded();
 		if (popupCanvas != null) popupCanvas.OnLevelWasLoaded();
 		if (matchMakerCanvas != null) matchMakerCanvas.OnLevelWasLoaded();
@@ -104,7 +104,7 @@ public class GuiLobbyManager : NetworkLobbyManager
 		lobbyCanvas.Show();
 		onlineCanvas.Show(onlineStatus);
 
-		exitToLobbyCanvas.Hide();
+		//exitToLobbyCanvas.Hide();
 
 	}
 
@@ -115,7 +115,7 @@ public class GuiLobbyManager : NetworkLobbyManager
 
 		if (Application.loadedLevelName == base.playScene)
 		{
-			exitToLobbyCanvas.Show();
+			//exitToLobbyCanvas.Show();
 		}
 	}
 }
