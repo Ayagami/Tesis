@@ -10,6 +10,8 @@ public class BulletBehaviour : NetworkBehaviour {
 
 	public SpellTypes projectileType = SpellTypes.NULL;
 
+	public int Team = -1;
+
 	// Use this for initialization
 	void Start () {
 		Rigidbody rb = this.GetComponent<Rigidbody> ();
@@ -26,12 +28,11 @@ public class BulletBehaviour : NetworkBehaviour {
 	void OnTriggerEnter(Collider obj){
 		if (obj.tag == "Player") {
 			string uIdentity = obj.transform.name;
-			CmdTellServerWhoWasShot (uIdentity, bulletDamage);
+			CmdTellServerWhoWasShot (uIdentity, bulletDamage, Team);
 		} else if (obj.tag == "Destruible") {
 			obj.SendMessage ("Explode");
 			Destroy (obj.gameObject);
 		} else {
-			Debug.Log("CHECKING THIS");
 			RaycastHit hitInfo;
 			FracturedChunk chunkRaycast = FracturedChunk.ChunkRaycast(transform.position, transform.forward, out hitInfo);
 			
@@ -44,8 +45,15 @@ public class BulletBehaviour : NetworkBehaviour {
 	}
 
 	[Command]
-    void CmdTellServerWhoWasShot (string uniqueID, int dmg) {
+    void CmdTellServerWhoWasShot (string uniqueID, int dmg, int Team) {
 		GameObject go = GameObject.Find(uniqueID);
-		go.GetComponent<PlayerAttributes>().TakeDamage(dmg);
+
+		PlayerAttributes PA = go.GetComponent<PlayerAttributes> ();
+		if (PA) {
+			if(PA.Team == Team && GameManager_References.instance.mode != GameManager_References.GameType.NORMAL){
+				return;
+			}else
+				PA.TakeDamage(dmg);
+		}
 	}
 }

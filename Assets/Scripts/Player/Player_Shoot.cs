@@ -22,9 +22,14 @@ public class Player_Shoot : NetworkBehaviour {
 
 	private bool isShooting = false;
 
+	private PlayerAttributes playerAttr;
+
 	// Use this for initialization
 	void Start () {
-		currentSpells = new List<SpellTypes>();
+		currentSpells = new List<SpellTypes> ();
+		playerAttr = GetComponent<PlayerAttributes>();
+		//Cursor.visible = false;
+		//Cursor.lockState = CursorLockMode.Locked;
 	}
 	
 	// Update is called once per frame
@@ -39,7 +44,7 @@ public class Player_Shoot : NetworkBehaviour {
 		}
 
 		currentCooldown += Time.deltaTime;
-		if (Input.GetKeyDown (KeyCode.Escape)) {
+		if (Input.GetKeyDown (KeyCode.F1)) {
 			cleanSpells();
 		}
 
@@ -53,6 +58,10 @@ public class Player_Shoot : NetworkBehaviour {
 		if (!isLocalPlayer)
 			return;
 
+		/*if (Input.GetKeyDown (KeyCode.Escape)) {
+			Cursor.visible = !Cursor.visible;
+			Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.Confined : CursorLockMode.Locked;
+		}*/
 		CheckSpellTypeChanges ();
 		CheckAddSpell ();
 	}
@@ -204,6 +213,7 @@ public class Player_Shoot : NetworkBehaviour {
 		go.GetComponent<Zombie_ID> ().zombieID = ID;
 		NetworkServer.Spawn (go);
 
+		go.GetComponent<BulletBehaviour> ().Team = playerAttr.Team;
 
         if ((SpellTypes)type == SpellTypes.SHIELD || (SpellTypes)type == SpellTypes.RAY) {
             GameObject parent = GameObject.Find(who) as GameObject;

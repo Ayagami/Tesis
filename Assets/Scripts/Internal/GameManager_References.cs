@@ -34,6 +34,7 @@ public class GameManager_References : NetworkBehaviour {
 	void Start(){
 		Players = new List<GameObject> ();
 		Time.timeScale = 1;
+		WhoWon = null;
 	}
 
 	void Update(){
@@ -43,7 +44,6 @@ public class GameManager_References : NetworkBehaviour {
 					Players.Add(player);
 				}
 				isEnabled = true;
-				CheckWinCondition ();
 			}
 
 		if (mode == GameType.NORMAL) {
@@ -55,8 +55,8 @@ public class GameManager_References : NetworkBehaviour {
 			}
 		}
 
-		if (mode == GameType.TEAM) {	/* Should be applied on CAPTURE_FLAG, CAPTURE_POINT Too.*/
-			if(teamWon != -1){
+		if (mode == GameType.TEAM || mode == GameType.CAPTURE_FLAG || mode == GameType.CAPTURE_POINT) {	/* Should be applied on CAPTURE_FLAG, CAPTURE_POINT Too.*/
+			if(teamWon != -1 && localTeam != -1){
 				if(teamWon == localTeam){
 					YouWin.SetActive(true);
 					YouDie.SetActive(false);
@@ -86,7 +86,6 @@ public class GameManager_References : NetworkBehaviour {
 			break;
 
 			case GameType.TEAM:
-
 			int[] PlayersInTeam = new int[4];
 			for(int i=0; i < Players.Count; i++){
 				PlayersInTeam[Players[i].GetComponent<PlayerAttributes>().Team]++;
@@ -108,9 +107,13 @@ public class GameManager_References : NetworkBehaviour {
 			for(int i=0; i < PlayersInTeam.Length; i++){
 				Debug.Log(string.Format("Team {0}: {1}", i+1, PlayersInTeam[i]));
 			}
-
 			break;
 
+			case GameType.CAPTURE_FLAG:
+			for(int i=0; i < Players.Count; i++){
+				Debug.Log("Player " + i + " team = " + Players[i].GetComponent<PlayerAttributes>().Team);
+			}
+			break;
 		}
 
 	}

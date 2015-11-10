@@ -57,7 +57,8 @@ public class ColorControl : NetworkBehaviour
 	public void ClientChangeColor()
 	{
 		indexColor++;
-		if (indexColor > 3)
+		int whatToConsider = currentMode == LobbyGameMode.Flag ? 1 : colors.Length - 1;
+		if (indexColor > whatToConsider)
 			indexColor = 0;
 
 		var newCol = colors[indexColor];
@@ -81,6 +82,8 @@ public class ColorControl : NetworkBehaviour
 
 	void OnMyMode(LobbyGameMode mode){
 		currentMode = mode;
+		if (currentMode == LobbyGameMode.Flag)
+			CmdSetMyColor (colors [1]);
 		staticMode = currentMode;
 		playerUI.SetMode ((int)mode);
 	}

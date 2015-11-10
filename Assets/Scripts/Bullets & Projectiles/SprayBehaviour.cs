@@ -30,7 +30,11 @@ public class SprayBehaviour : ShieldBehaviour {
         PlayerAttributes PA = o.GetComponent<PlayerAttributes>();
         if (PA != null)    // Es player
         {
-            objects.Add(PA);
+			if(PA.Team == this.Team && GameManager_References.instance.mode != GameManager_References.GameType.NORMAL)
+				return;
+			else{
+            	objects.Add(PA);
+			}
         }
     }
 

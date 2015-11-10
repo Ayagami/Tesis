@@ -29,17 +29,18 @@ public class ShieldBehaviour : BulletBehaviour {
     }
 
 
-    void OnTriggerEnter(Collider obj)
-    {
-        if (obj.tag == "Bullet")
-        {
-           //float projDamage =  obj.GetComponent<BulletBehaviour>().bulletDamage;
+    void OnTriggerEnter(Collider obj)  {
+        if (obj.tag == "Bullet") {
 			BulletBehaviour bB = obj.GetComponent<BulletBehaviour>();
-           DoDamageToShield(CalculateDamage(bB));
+           DoDamageToShield(CalculateDamage(bB, bB.Team));
         }
     }
 
-	float CalculateDamage(BulletBehaviour bullet){
+	float CalculateDamage(BulletBehaviour bullet, int Team){
+
+		if (Team == this.Team && GameManager_References.instance.mode != GameManager_References.GameType.NORMAL)
+			return 0;
+
 		if (bullet.projectileType == WeakAgainst)
 			return bullet.bulletDamage * 2;
 		if (bullet.projectileType == strongAgainst)
