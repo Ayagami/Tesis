@@ -21,6 +21,7 @@ public class PlayerLobby : NetworkLobbyPlayer
 	{
 		cc = GetComponent<ColorControl>();
 		lobbyPlayer = GetComponent<NetworkLobbyPlayer>();
+		playerCanvas = null;
 	}
 
 	public override void OnClientEnterLobby()

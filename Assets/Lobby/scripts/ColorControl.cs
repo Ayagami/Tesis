@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 public class ColorControl : NetworkBehaviour
 {
-	public static Color[] colors = new Color[] { Color.red, Color.blue, Color.green, Color.yellow };
+	public static Color[] colors = new Color[] { Color.white, Color.blue, Color.green, Color.yellow };
 
 	//static bool isGameModesEnabled = false;
 
@@ -27,11 +27,13 @@ public class ColorControl : NetworkBehaviour
 	PlayerLobby playerUI;
 
 	private int indexMode = 0;
+	private int indexColor = 0;
 
 	void Awake()
 	{
 		lobbyPlayer = GetComponent<NetworkLobbyPlayer>();
 		playerUI = GetComponent<PlayerLobby>();
+		//myColor = Color.red;
 	}
 
 	[Command]
@@ -54,7 +56,11 @@ public class ColorControl : NetworkBehaviour
 
 	public void ClientChangeColor()
 	{
-		var newCol = colors[Random.Range(0,colors.Length)];
+		indexColor++;
+		if (indexColor > 3)
+			indexColor = 0;
+
+		var newCol = colors[indexColor];
 		CmdSetMyColor(newCol);
 	}
 

@@ -28,6 +28,7 @@ public class GameManager_References : NetworkBehaviour {
 
 	void Awake(){
 		instance = this;
+		WhoWon = null;
 	}
 
 	void Start(){
@@ -45,26 +46,25 @@ public class GameManager_References : NetworkBehaviour {
 				CheckWinCondition ();
 			}
 
-
 		if (mode == GameType.NORMAL) {
 			if (WhoWon != null) {
 				if (WhoWon.name == localPlayer) {
 					YouWin.SetActive (true);
-					//Time.timeScale = 0;
+					YouDie.SetActive (false);
 				}
 			}
 		}
 
-		if (mode == GameType.TEAM) {
+		if (mode == GameType.TEAM) {	/* Should be applied on CAPTURE_FLAG, CAPTURE_POINT Too.*/
 			if(teamWon != -1){
-				if(teamWon == localTeam)
+				if(teamWon == localTeam){
 					YouWin.SetActive(true);
+					YouDie.SetActive(false);
+				}
 			}
 		}
 	}
-
-
-
+	
 	public void PlayerDies(string playerName){
 
 		for (int i=0; i < Players.Count; i++) {
@@ -90,7 +90,6 @@ public class GameManager_References : NetworkBehaviour {
 			int[] PlayersInTeam = new int[4];
 			for(int i=0; i < Players.Count; i++){
 				PlayersInTeam[Players[i].GetComponent<PlayerAttributes>().Team]++;
-				Debug.Log(PlayersInTeam[i]);
 			}
 
 			int howMuchTeamsAreWith1OrMore = 0;
@@ -102,6 +101,12 @@ public class GameManager_References : NetworkBehaviour {
 			if(howMuchTeamsAreWith1OrMore==1){	// Hay un equipo ganador.
 				teamWon = Players[0].GetComponent<PlayerAttributes>().Team;
 				Debug.Log("TEAM WON" + teamWon);
+				return;
+			}
+
+			Debug.Log("Players Left");
+			for(int i=0; i < PlayersInTeam.Length; i++){
+				Debug.Log(string.Format("Team {0}: {1}", i+1, PlayersInTeam[i]));
 			}
 
 			break;
