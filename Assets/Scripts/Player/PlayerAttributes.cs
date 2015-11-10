@@ -8,10 +8,14 @@ public class PlayerAttributes : NetworkBehaviour {
 	[SyncVar (hook = "OnHealthChanged")] private int health = 100;
 	private Text healthText;
 
+	[SyncVar]
+	public int Team = -1;
+
 	public override void OnStartLocalPlayer ()
 	{
 		healthText = GameObject.Find("Health Text").GetComponent<Text>();
 		SetHealthText();
+		GameManager_References.setTeam (Team);
 	}
 	// Use this for initialization
 	void Start () {
@@ -34,7 +38,7 @@ public class PlayerAttributes : NetworkBehaviour {
              */
 
             SendMessage("onDieMessage", SendMessageOptions.DontRequireReceiver);
-			CmdTellToServerPlayerDies(this.name, (int) GameManager_References.GameType.NORMAL);
+			CmdTellToServerPlayerDies(this.name);
             if(isLocalPlayer)
 			    GameManager_References.instance.YouDie.SetActive(true);
             this.gameObject.SetActive(false);
@@ -42,8 +46,8 @@ public class PlayerAttributes : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdTellToServerPlayerDies(string playerName, int GType){
-		GameManager_References.instance.PlayerDies (playerName, GType);
+	public void CmdTellToServerPlayerDies(string playerName){
+		GameManager_References.instance.PlayerDies (playerName);
 	}
 
 	void SetHealthText() {

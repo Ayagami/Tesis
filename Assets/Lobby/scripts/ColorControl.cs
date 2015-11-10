@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 public class ColorControl : NetworkBehaviour
 {
-	static Color[] colors = new Color[] { Color.white, Color.magenta, Color.red, Color.cyan, Color.blue, Color.green, Color.yellow };
+	public static Color[] colors = new Color[] { Color.red, Color.blue, Color.green, Color.yellow };
 
 	//static bool isGameModesEnabled = false;
 

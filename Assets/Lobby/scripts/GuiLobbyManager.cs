@@ -58,6 +58,21 @@ public class GuiLobbyManager : NetworkLobbyManager
 		//var cc = lobbyPlayer.GetComponent<ColorControl>();
 		//var playerX = gamePlayer.GetComponent<Player>();
 		//playerX.myColor = cc.myColor;
+
+		var cc = lobbyPlayer.GetComponent<ColorControl> ();
+		var playerAttributes = gamePlayer.GetComponent<PlayerAttributes> ();
+
+		int team = 0;
+		for(int i=0; i < ColorControl.colors.Length; i++){
+			if(ColorControl.colors[i] == cc.myColor){
+				team = i;
+				break;
+			}
+		}
+
+		playerAttributes.Team = team;
+		GameManager_References.instance.mode = (GameManager_References.GameType)cc.currentMode;
+
 		return true;
 	}
 

@@ -15,9 +15,16 @@ public class GameManager_References : NetworkBehaviour {
 	[SyncVar]
 	private GameObject WhoWon = null;
 
+
+	[SyncVar]
+	private int teamWon = -1;
+
 	private bool isEnabled = false;
 
 	private string localPlayer = "";
+	private int localTeam = -1;
+
+	public GameType mode = GameType.NORMAL;
 
 	void Awake(){
 		instance = this;
@@ -35,19 +42,30 @@ public class GameManager_References : NetworkBehaviour {
 					Players.Add(player);
 				}
 				isEnabled = true;
+				CheckWinCondition ();
 			}
 
-		if (WhoWon != null) {
-			if(WhoWon.name == localPlayer){
-				YouWin.SetActive(true);
-				//Time.timeScale = 0;
+
+		if (mode == GameType.NORMAL) {
+			if (WhoWon != null) {
+				if (WhoWon.name == localPlayer) {
+					YouWin.SetActive (true);
+					//Time.timeScale = 0;
+				}
 			}
 		}
 
-			
+		if (mode == GameType.TEAM) {
+			if(teamWon != -1){
+				if(teamWon == localTeam)
+					YouWin.SetActive(true);
+			}
+		}
 	}
 
-	public void PlayerDies(string playerName, int GType){
+
+
+	public void PlayerDies(string playerName){
 
 		for (int i=0; i < Players.Count; i++) {
 			if(Players[i].name == playerName){
@@ -56,21 +74,55 @@ public class GameManager_References : NetworkBehaviour {
 			}
 		}
 
-		CheckWinCondition (GType);
+		CheckWinCondition ();
 	}
 
-	void CheckWinCondition(int GType){
-		if (Players.Count > 0 && Players.Count <= 1) {
-			WhoWon = Players[0];
+	void CheckWinCondition(){
+		switch (mode) {
+			case GameType.NORMAL:
+				if (Players.Count > 0 && Players.Count <= 1) {
+					WhoWon = Players[0];
+				}
+			break;
+
+			case GameType.TEAM:
+
+			int[] PlayersInTeam = new int[4];
+			for(int i=0; i < Players.Count; i++){
+				PlayersInTeam[Players[i].GetComponent<PlayerAttributes>().Team]++;
+				Debug.Log(PlayersInTeam[i]);
+			}
+
+			int howMuchTeamsAreWith1OrMore = 0;
+			for(int i=0; i < PlayersInTeam.Length; i++) {
+				if(PlayersInTeam[i] > 0)
+					howMuchTeamsAreWith1OrMore++;
+			}
+
+			if(howMuchTeamsAreWith1OrMore==1){	// Hay un equipo ganador.
+				teamWon = Players[0].GetComponent<PlayerAttributes>().Team;
+				Debug.Log("TEAM WON" + teamWon);
+			}
+
+			break;
+
 		}
+
 	}
 
 	public static void setPlayer(string p){
 		instance.localPlayer = p;
 	}
 
+	public static void setTeam(int team){
+		instance.localTeam = team;
+	}
+
 	public enum GameType{
 		NORMAL,
+		TEAM,
+		CAPTURE_FLAG,
+		CAPTURE_POINT,
 		Count
 	}
 }
