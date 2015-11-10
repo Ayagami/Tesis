@@ -15,6 +15,8 @@ public class PlayerLobby : NetworkLobbyPlayer
 	ColorControl cc;
 	NetworkLobbyPlayer lobbyPlayer;
 
+	public ColorControl CC() { return cc; }
+
 	void Awake()
 	{
 		cc = GetComponent<ColorControl>();
@@ -79,10 +81,13 @@ public class PlayerLobby : NetworkLobbyPlayer
 		var hooks = playerCanvas.GetComponent<PlayerCanvasHooks>();
 		hooks.panelPos.localPosition = new Vector3(GetPlayerPos(lobbyPlayer.slot), 0, 0);
 		hooks.SetColor(cc.myColor);
-
 		hooks.OnColorChangeHook = OnGUIColorChange;
 		hooks.OnReadyHook = OnGUIReady;
 		hooks.OnRemoveHook = OnGUIRemove;
+		hooks.OnModeChangeHook = OnGUIChangeMode;
+		hooks.isTheServer = isServer;
+		hooks.LobbyData = this;
+
 		hooks.SetLocalPlayer();
 	}
 
@@ -98,6 +103,11 @@ public class PlayerLobby : NetworkLobbyPlayer
 	{
 		var hooks = playerCanvas.GetComponent<PlayerCanvasHooks>();
 		hooks.SetColor(color);
+	}
+
+	public void SetMode(int mode){
+		var hooks = playerCanvas.GetComponent<PlayerCanvasHooks> ();
+		hooks.SetMode (mode);
 	}
 
 	public void SetReady(bool ready)
@@ -141,6 +151,12 @@ public class PlayerLobby : NetworkLobbyPlayer
 			{
 				lobby.SetFocusToAddPlayerButton();
 			}
+		}
+	}
+
+	void OnGUIChangeMode(){
+		if (isLocalPlayer && isServer) {
+			cc.ServerChangeMode();
 		}
 	}
 }
