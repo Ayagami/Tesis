@@ -8,6 +8,9 @@ public class Player_ID : NetworkBehaviour {
 	private NetworkInstanceId playerNetID;
 	private Transform myTransform;
 
+
+	private bool initialized = false;
+
 	public override void OnStartLocalPlayer ()
 	{
 		GetNetIdentity();
@@ -29,6 +32,13 @@ public class Player_ID : NetworkBehaviour {
 		}
 	}
 
+	void LateUpdate(){
+		if (!initialized && isLocalPlayer) {
+			GameManager_References.instance.setPlayer(transform.name);
+			initialized = true;
+		}
+	}
+
 	[Client]
 	void GetNetIdentity()
 	{
@@ -45,7 +55,6 @@ public class Player_ID : NetworkBehaviour {
 		else
 		{
 			myTransform.name = MakeUniqueIdentity();
-			GameManager_References.setPlayer(myTransform.name);
 		}
 	}
 

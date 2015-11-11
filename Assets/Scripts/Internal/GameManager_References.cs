@@ -90,22 +90,27 @@ public class GameManager_References : NetworkBehaviour {
 
 	[ClientRpc]
 	void RpcRecieveWhoWon(string playerName){
+		DebugConsole.Log ("RECIEVEWHOWON" + playerName);
 		for (int i=0; i < Players.Count; i++) {
 			if(Players[i].name == playerName){
 				WhoWon = Players[i];
 				break;
 			}
 		}
+		DebugConsole.Log("WhoWon: " + WhoWon.name + " , Me " + localPlayer);
 	}
 	[ClientRpc]
 	void RpcRecieveWhoTeamWon(int team){
+		DebugConsole.Log ("RECIEVETEAMWON " + team);
 		this.teamWon = teamWon;
 	}
 
 	[ServerCallback]
 	void sendWhoWon(){
 		Debug.Log ("SENDING...");
+		DebugConsole.Log ("SENDING");
 		if (isServer) {
+			DebugConsole.Log ("I'm A SERVER!");
 			if(mode == GameType.NORMAL)
 				RpcRecieveWhoWon (WhoWon.name);
 			else
@@ -114,6 +119,9 @@ public class GameManager_References : NetworkBehaviour {
 	}
 
 	void CheckWinCondition(){
+		if (!isServer)
+			return;
+
 		Debug.Log ("CHECKING CONDITION");
 		switch (mode) {
 			case GameType.NORMAL:
@@ -138,6 +146,8 @@ public class GameManager_References : NetworkBehaviour {
 					howMuchTeamsAreWith1OrMore++;
 			}
 
+			DebugConsole.Log("Hay... " + howMuchTeamsAreWith1OrMore);
+
 			if(howMuchTeamsAreWith1OrMore==1){	// Hay un equipo ganador.
 				teamWon = Players[0].GetComponent<PlayerAttributes>().Team;
 				Debug.Log("TEAM WON" + teamWon);
@@ -160,8 +170,9 @@ public class GameManager_References : NetworkBehaviour {
 
 	}
 
-	public static void setPlayer(string p){
-		instance.localPlayer = p;
+	public void setPlayer(string p){
+		DebugConsole.Log ("Ok, seteo mi player " + p);
+		localPlayer = p;
 	}
 
 	public static void setTeam(int team){
