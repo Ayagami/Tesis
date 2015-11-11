@@ -73,6 +73,9 @@ public class GuiLobbyManager : NetworkLobbyManager
 		playerAttributes.Team = team;
 		GameManager_References.instance.mode = (GameManager_References.GameType)cc.currentMode;
 
+		gamePlayer.GetComponent<Player_NetworkSetup> ().TeamColor = cc.myColor;
+		gamePlayer.GetComponentInChildren<Renderer> ().material.color = cc.myColor;
+
 		return true;
 	}
 

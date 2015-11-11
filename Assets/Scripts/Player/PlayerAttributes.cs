@@ -17,16 +17,13 @@ public class PlayerAttributes : NetworkBehaviour {
 		SetHealthText();
 		GameManager_References.setTeam (Team);
 	}
-	// Use this for initialization
-	void Start () {
 
-	}
 	
 	// Update is called once per frame
 	void Update () {
 		//CheckIfINeedToDie ();
-
 	}
+
 
 	void CheckIfINeedToDie(){
 		if (health <= 0) {

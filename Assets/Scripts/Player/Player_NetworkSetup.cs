@@ -12,6 +12,9 @@ public class Player_NetworkSetup : NetworkBehaviour {
 	public Transform myTrans;
 
     private CamaraJugador CameraInstance;
+
+	[SyncVar] public Color TeamColor = Color.white;
+	private Renderer rendererReference = null;
 	// Use this for initialization
 	public override void OnStartLocalPlayer () {
 		if (isLocalPlayer) {
@@ -67,6 +70,29 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 		if (GUI.Button(new Rect(360, 30, 100, 20), "Exit")) {
 				CmdLobby();
+		}
+	}
+
+	
+	void OnColorChanged(Color newColor){
+		TeamColor = newColor;
+		if (rendererReference == null)
+			rendererReference = GetComponentInChildren<Renderer> ();
+		
+		if (rendererReference) {
+			rendererReference.material.color = TeamColor;
+		}
+	}
+
+	void FixedUpdate(){
+		if (rendererReference == null) {
+			rendererReference = GetComponentInChildren<Renderer> ();
+		}
+
+		if(rendererReference){
+			if(rendererReference.material.color != TeamColor){
+				rendererReference.material.color = TeamColor;
+			}
 		}
 	}
 }
