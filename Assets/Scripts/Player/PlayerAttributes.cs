@@ -11,6 +11,9 @@ public class PlayerAttributes : NetworkBehaviour {
 	[SyncVar]
 	public int Team = -1;
 
+	private bool initialized = false;
+
+
 	void Start(){
 		if (isLocalPlayer) {
 			healthText = GameObject.Find("Health Text").GetComponent<Text>();
@@ -18,14 +21,19 @@ public class PlayerAttributes : NetworkBehaviour {
 		}
 	}
 
-	public override void OnStartLocalPlayer () {
-		GameManager_References.setTeam (Team);
-	}
+	/*public override void OnStartLocalPlayer () {
 
+	}
+	*/
 	
 	// Update is called once per frame
 	void Update () {
-		//CheckIfINeedToDie ();
+		if (!initialized && isLocalPlayer) {
+			if(Team != -1){
+			GameManager_References.setTeam (Team);
+			initialized = true;
+			}
+		}
 	}
 
 

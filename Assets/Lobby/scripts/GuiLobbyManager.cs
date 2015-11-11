@@ -83,7 +83,9 @@ public class GuiLobbyManager : NetworkLobbyManager
 					break;
 				}
 			}
+			DebugConsole.Log("Sending team with GUILOBBYMANAGER " + team);
 			playerAttributes.Team = team;
+			DebugConsole.Log("" + playerAttributes.Team);
 			gamePlayer.GetComponent<Player_NetworkSetup> ().TeamColor = cc.myColor;
 			gamePlayer.GetComponentInChildren<Renderer> ().material.color = cc.myColor;
 		}

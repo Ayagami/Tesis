@@ -101,7 +101,7 @@ public class GameManager_References : NetworkBehaviour {
 	}
 	[ClientRpc]
 	void RpcRecieveWhoTeamWon(int team){
-		DebugConsole.Log ("RECIEVETEAMWON " + team);
+		DebugConsole.Log ("Team Won " + team + " , my team: " + localTeam);
 		this.teamWon = teamWon;
 	}
 
@@ -176,6 +176,7 @@ public class GameManager_References : NetworkBehaviour {
 	}
 
 	public static void setTeam(int team){
+		DebugConsole.Log ("Ok, seteo mi team " + team);
 		instance.localTeam = team;
 	}
 	
