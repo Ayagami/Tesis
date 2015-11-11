@@ -32,6 +32,8 @@ public class GameManager_References : NetworkBehaviour {
 
 	public Flag_Base[] bases;
 
+	[SyncVar]
+	private bool ModeInitialized = false;
 
 	void Awake(){
 		if(instance == null)
@@ -51,7 +53,6 @@ public class GameManager_References : NetworkBehaviour {
 				foreach(GameObject player in P){
 					Players.Add(player);
 				}
-				//DoModeInitialization();
 				isEnabled = true;
 		}
 
@@ -166,9 +167,9 @@ public class GameManager_References : NetworkBehaviour {
 	public static void setTeam(int team){
 		instance.localTeam = team;
 	}
-
-	protected void DoModeInitialization(){
-		if (!isServer)
+	
+	protected void CmdDoModeInitialization(){
+		if (ModeInitialized)
 			return;
 
 		switch (this.mode) {
@@ -183,6 +184,7 @@ public class GameManager_References : NetworkBehaviour {
 					bases[i] = Bases[i].GetComponent<Flag_Base>();
 					bases[i].Team = i;
 					string iDFlag = "Flag_team" + i;
+					Debug.Log("YAY");
 					CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name, i, iDFlag);
 				}
 			break;
@@ -192,7 +194,7 @@ public class GameManager_References : NetworkBehaviour {
 		}
 	}
 
-	//[Command]
+	[Command]
 	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
 
 		GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
@@ -226,9 +228,12 @@ public class GameManager_References : NetworkBehaviour {
 
 
 	public void SetMode(GameType gameMode){
+
 		instance.mode = gameMode;
-		if (isServer)
-			DoModeInitialization ();
+		Debug.Log (gameMode);
+		if (isServer) {
+			CmdDoModeInitialization ();
+		}
 	}
 
 	public enum GameType{
