@@ -69,8 +69,7 @@ public class PlayerCanvasHooks : MonoBehaviour
 			OnModeChangeHook.Invoke ();
 	}
 
-	public void SetLocalPlayer()
-	{
+	public void SetLocalPlayer() {
 		isLocalPlayer = true;
 		nameText.text = "YOU";
 		readyText.text = "Play";
@@ -107,7 +106,6 @@ public class PlayerCanvasHooks : MonoBehaviour
 			break;
 		case ColorControl.LobbyGameMode.Flag:
 			modeText.text = "Mode:Flag";
-
 			colorButton.interactable = true;
 			break;
 		}

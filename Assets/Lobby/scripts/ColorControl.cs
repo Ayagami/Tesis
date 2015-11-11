@@ -82,8 +82,12 @@ public class ColorControl : NetworkBehaviour
 
 	void OnMyMode(LobbyGameMode mode){
 		currentMode = mode;
-		if (currentMode == LobbyGameMode.Flag)
-			CmdSetMyColor (colors [1]);
+
+		if (currentMode == LobbyGameMode.Flag && indexColor > 1) {
+			OnMyColor(colors[0]);
+			CmdSetMyColor (colors [0]);
+		}
+
 		staticMode = currentMode;
 		playerUI.SetMode ((int)mode);
 	}

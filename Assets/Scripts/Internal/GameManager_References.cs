@@ -26,8 +26,6 @@ public class GameManager_References : NetworkBehaviour {
 
 	public GameType mode = GameType.NORMAL;
 
-
-
 	[Header("References of GameModes")]
 	public GameObject flagPrefab;
 
@@ -103,6 +101,7 @@ public class GameManager_References : NetworkBehaviour {
 
 	[ServerCallback]
 	void sendWhoWon(){
+		Debug.Log ("SENDING...");
 		if (isServer) {
 			if(mode == GameType.NORMAL)
 				RpcRecieveWhoWon (WhoWon.name);
