@@ -15,14 +15,11 @@ public class PlayerAttributes : NetworkBehaviour {
 		if (isLocalPlayer) {
 			healthText = GameObject.Find("Health Text").GetComponent<Text>();
 			SetHealthText();
-			GameManager_References.setTeam (Team);
 		}
 	}
 
-	public override void OnStartLocalPlayer ()
-	{
-		/*
-		 */
+	public override void OnStartLocalPlayer () {
+		GameManager_References.setTeam (Team);
 	}
 
 	

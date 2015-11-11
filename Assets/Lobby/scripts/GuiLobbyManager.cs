@@ -18,10 +18,23 @@ public class GuiLobbyManager : NetworkLobbyManager
 	public string onlineStatus;
 	static public GuiLobbyManager s_Singleton;
 
-	void Start()
-	{
+
+	private bool needToSendGameMode = false;
+	private GameManager_References.GameType gType = GameManager_References.GameType.NORMAL;
+
+	void Start() {
 		s_Singleton = this;
 		offlineCanvas.Show();
+	}
+
+
+	void FixedUpdate(){
+		if (needToSendGameMode) {
+			if(GameManager_References.instance != null){
+				GameManager_References.instance.SetMode(gType);
+				needToSendGameMode = false;
+			}
+		}
 	}
 
 	void OnLevelWasLoaded()
@@ -75,10 +88,15 @@ public class GuiLobbyManager : NetworkLobbyManager
 			gamePlayer.GetComponentInChildren<Renderer> ().material.color = cc.myColor;
 		}
 
-		GameManager_References.SetMode((GameManager_References.GameType)cc.currentMode);
-
-
-
+		if (GameManager_References.instance == null) {
+			GameManager_References.FindInstance();
+		}
+		if (GameManager_References.instance)
+			GameManager_References.instance.SetMode ((GameManager_References.GameType)cc.currentMode);
+		else {
+			needToSendGameMode = true;
+			gType = (GameManager_References.GameType)cc.currentMode;
+		}
 		return true;
 	}
 

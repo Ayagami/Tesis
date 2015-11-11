@@ -24,6 +24,7 @@ public class GameManager_References : NetworkBehaviour {
 	private string localPlayer = "";
 	private int localTeam = -1;
 
+	[SyncVar]
 	public GameType mode = GameType.NORMAL;
 
 	[Header("References of GameModes")]
@@ -33,7 +34,8 @@ public class GameManager_References : NetworkBehaviour {
 
 
 	void Awake(){
-		instance = this;
+		if(instance == null)
+			instance = this;
 		WhoWon = null;
 	}
 
@@ -166,6 +168,9 @@ public class GameManager_References : NetworkBehaviour {
 	}
 
 	protected void DoModeInitialization(){
+		if (!isServer)
+			return;
+
 		switch (this.mode) {
 			case  GameType.NORMAL:
 			case  GameType.TEAM:
@@ -177,7 +182,8 @@ public class GameManager_References : NetworkBehaviour {
 				for(int i=0; i < Bases.Length; i++){
 					bases[i] = Bases[i].GetComponent<Flag_Base>();
 					bases[i].Team = i;
-					CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name, i);
+					string iDFlag = "Flag_team" + i;
+					CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name, i, iDFlag);
 				}
 			break;
 
@@ -187,10 +193,14 @@ public class GameManager_References : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team){
+	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
+
 		GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
 
 		Flag FC = go.GetComponent<Flag> ();
+
+		go.GetComponent<Zombie_ID> ().zombieID = ID;
+
 		Flag_Base Base = GameObject.Find (parent).GetComponent<Flag_Base> ();
 
 		FC._base = Base;
@@ -199,9 +209,23 @@ public class GameManager_References : NetworkBehaviour {
 		Base.Team = team;
 
 		NetworkServer.Spawn (go);
+		Debug.LogError ("ACÁ LLEGUE");
+		Debug.Log ("FLAG SPAWNED");
+	
 	}
 
-	public static void SetMode(GameType gameMode){
+	public static void FindInstance(){
+		if (instance == null) {
+			GameObject GO = GameObject.Find ("GameManager");
+			if(GO){
+				GameManager_References GMR = GO.GetComponent<GameManager_References>();
+				instance = GMR;
+			}
+		}
+	}
+
+
+	public void SetMode(GameType gameMode){
 		instance.mode = gameMode;
 	}
 
