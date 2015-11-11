@@ -11,11 +11,18 @@ public class PlayerAttributes : NetworkBehaviour {
 	[SyncVar]
 	public int Team = -1;
 
+	void Start(){
+		if (isLocalPlayer) {
+			healthText = GameObject.Find("Health Text").GetComponent<Text>();
+			SetHealthText();
+			GameManager_References.setTeam (Team);
+		}
+	}
+
 	public override void OnStartLocalPlayer ()
 	{
-		healthText = GameObject.Find("Health Text").GetComponent<Text>();
-		SetHealthText();
-		GameManager_References.setTeam (Team);
+		/*
+		 */
 	}
 
 	
@@ -45,6 +52,7 @@ public class PlayerAttributes : NetworkBehaviour {
 	[Command]
 	public void CmdTellToServerPlayerDies(string playerName){
 		GameManager_References.instance.PlayerDies (playerName);
+		Debug.Log ("I'm Running");
 	}
 
 	void SetHealthText() {

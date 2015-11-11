@@ -66,9 +66,10 @@ public class GameManager_References : NetworkBehaviour {
 	}
 	
 	public void PlayerDies(string playerName){
-
+		Debug.Log ("Player Dies");
 		for (int i=0; i < Players.Count; i++) {
 			if(Players[i].name == playerName){
+				Debug.Log("REMOVING PLAYER");
 				Players.Remove(Players[i]);
 				break;
 			}
@@ -77,12 +78,41 @@ public class GameManager_References : NetworkBehaviour {
 		CheckWinCondition ();
 	}
 
+	[ClientRpc]
+	void RpcRecieveWhoWon(string playerName){
+		for (int i=0; i < Players.Count; i++) {
+			if(Players[i].name == playerName){
+				WhoWon = Players[i];
+				break;
+			}
+		}
+	}
+	[ClientRpc]
+	void RpcRecieveWhoTeamWon(int team){
+		this.teamWon = teamWon;
+	}
+
+	[ServerCallback]
+	void sendWhoWon(){
+		if (isServer) {
+			if(mode == GameType.NORMAL)
+				RpcRecieveWhoWon (WhoWon.name);
+			else
+				RpcRecieveWhoTeamWon(teamWon);
+		}
+	}
+
 	void CheckWinCondition(){
+		Debug.Log ("CHECKING CONDITION");
 		switch (mode) {
 			case GameType.NORMAL:
+				Debug.Log("NORMAL");
+				Debug.Log(Players.Count);
 				if (Players.Count > 0 && Players.Count <= 1) {
 					WhoWon = Players[0];
 				}
+				if(isServer)
+					sendWhoWon();
 			break;
 
 			case GameType.TEAM:
@@ -100,6 +130,7 @@ public class GameManager_References : NetworkBehaviour {
 			if(howMuchTeamsAreWith1OrMore==1){	// Hay un equipo ganador.
 				teamWon = Players[0].GetComponent<PlayerAttributes>().Team;
 				Debug.Log("TEAM WON" + teamWon);
+				sendWhoWon();
 				return;
 			}
 

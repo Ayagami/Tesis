@@ -15,7 +15,7 @@ public class OfflineControlHooks : MonoBehaviour
 
 	public string GetAddress()
 	{
-		return addressInput.text;
+		return addressInput.text.ToLower();
 	}
 
 
