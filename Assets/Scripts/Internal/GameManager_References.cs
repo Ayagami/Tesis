@@ -51,7 +51,7 @@ public class GameManager_References : NetworkBehaviour {
 				foreach(GameObject player in P){
 					Players.Add(player);
 				}
-				DoModeInitialization();
+				//DoModeInitialization();
 				isEnabled = true;
 		}
 
@@ -192,7 +192,7 @@ public class GameManager_References : NetworkBehaviour {
 		}
 	}
 
-	[Command]
+	//[Command]
 	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
 
 		GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
@@ -227,6 +227,8 @@ public class GameManager_References : NetworkBehaviour {
 
 	public void SetMode(GameType gameMode){
 		instance.mode = gameMode;
+		if (isServer)
+			DoModeInitialization ();
 	}
 
 	public enum GameType{
