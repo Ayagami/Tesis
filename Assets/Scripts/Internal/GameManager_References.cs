@@ -26,6 +26,14 @@ public class GameManager_References : NetworkBehaviour {
 
 	public GameType mode = GameType.NORMAL;
 
+
+
+	[Header("References of GameModes")]
+	public GameObject flagPrefab;
+
+	public Flag_Base[] bases;
+
+
 	void Awake(){
 		instance = this;
 		WhoWon = null;
@@ -38,13 +46,14 @@ public class GameManager_References : NetworkBehaviour {
 	}
 
 	void Update(){
-			if(!isEnabled){
+		if(!isEnabled){
 				GameObject[] P = GameObject.FindGameObjectsWithTag("Player");
 				foreach(GameObject player in P){
 					Players.Add(player);
 				}
+				DoModeInitialization();
 				isEnabled = true;
-			}
+		}
 
 		if (mode == GameType.NORMAL) {
 			if (WhoWon != null) {
@@ -155,6 +164,45 @@ public class GameManager_References : NetworkBehaviour {
 
 	public static void setTeam(int team){
 		instance.localTeam = team;
+	}
+
+	protected void DoModeInitialization(){
+		Debug.Log ("DOING INITIALIZATIONS");
+		switch (this.mode) {
+			case  GameType.NORMAL:
+			case  GameType.TEAM:
+			break;
+
+			case GameType.CAPTURE_FLAG:
+				Debug.Log("YAY");
+				GameObject[] Bases = GameObject.FindGameObjectsWithTag("Flag_Bases");
+				bases = new Flag_Base[Bases.Length];
+				for(int i=0; i < Bases.Length; i++){
+					bases[i] = Bases[i].GetComponent<Flag_Base>();
+					CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name);
+				}
+			break;
+
+			case GameType.CAPTURE_POINT:
+			break;
+		}
+	}
+
+	[Command]
+	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent){
+		GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
+
+		Flag FC = go.GetComponent<Flag> ();
+		Flag_Base Base = GameObject.Find (parent).GetComponent<Flag_Base> ();
+
+		FC._base = Base;
+
+		NetworkServer.Spawn (go);
+	}
+
+	public static void SetMode(GameType gameMode){
+		instance.mode = gameMode;
+		//instance.DoModeInitialization ();
 	}
 
 	public enum GameType{

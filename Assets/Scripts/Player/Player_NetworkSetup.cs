@@ -15,6 +15,10 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 	[SyncVar] public Color TeamColor = Color.white;
 	private Renderer rendererReference = null;
+
+	public Transform FlagPosition = null;
+
+
 	// Use this for initialization
 	public override void OnStartLocalPlayer () {
 		if (isLocalPlayer) {
