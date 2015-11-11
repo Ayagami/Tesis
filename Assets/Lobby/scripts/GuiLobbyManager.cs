@@ -59,22 +59,25 @@ public class GuiLobbyManager : NetworkLobbyManager
 		//var playerX = gamePlayer.GetComponent<Player>();
 		//playerX.myColor = cc.myColor;
 
-		var cc = lobbyPlayer.GetComponent<ColorControl> ();
-		var playerAttributes = gamePlayer.GetComponent<PlayerAttributes> ();
 
-		int team = 0;
-		for(int i=0; i < ColorControl.colors.Length; i++){
-			if(ColorControl.colors[i] == cc.myColor){
-				team = i;
-				break;
+		var cc = lobbyPlayer.GetComponent<ColorControl> ();
+		if ((GameManager_References.GameType)cc.currentMode != GameManager_References.GameType.NORMAL) {
+			var playerAttributes = gamePlayer.GetComponent<PlayerAttributes> ();
+			int team = 0;
+			for (int i=0; i < ColorControl.colors.Length; i++) {
+				if (ColorControl.colors [i] == cc.myColor) {
+					team = i;
+					break;
+				}
 			}
+			playerAttributes.Team = team;
+			gamePlayer.GetComponent<Player_NetworkSetup> ().TeamColor = cc.myColor;
+			gamePlayer.GetComponentInChildren<Renderer> ().material.color = cc.myColor;
 		}
 
-		playerAttributes.Team = team;
 		GameManager_References.SetMode((GameManager_References.GameType)cc.currentMode);
 
-		gamePlayer.GetComponent<Player_NetworkSetup> ().TeamColor = cc.myColor;
-		gamePlayer.GetComponentInChildren<Renderer> ().material.color = cc.myColor;
+
 
 		return true;
 	}

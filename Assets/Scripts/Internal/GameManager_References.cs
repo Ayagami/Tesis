@@ -166,19 +166,18 @@ public class GameManager_References : NetworkBehaviour {
 	}
 
 	protected void DoModeInitialization(){
-		Debug.Log ("DOING INITIALIZATIONS");
 		switch (this.mode) {
 			case  GameType.NORMAL:
 			case  GameType.TEAM:
 			break;
 
 			case GameType.CAPTURE_FLAG:
-				Debug.Log("YAY");
 				GameObject[] Bases = GameObject.FindGameObjectsWithTag("Flag_Bases");
 				bases = new Flag_Base[Bases.Length];
 				for(int i=0; i < Bases.Length; i++){
 					bases[i] = Bases[i].GetComponent<Flag_Base>();
-					CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name);
+					bases[i].Team = i;
+					CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name, i);
 				}
 			break;
 
@@ -188,20 +187,22 @@ public class GameManager_References : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent){
+	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team){
 		GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
 
 		Flag FC = go.GetComponent<Flag> ();
 		Flag_Base Base = GameObject.Find (parent).GetComponent<Flag_Base> ();
 
 		FC._base = Base;
+		FC.Team = team;
+
+		Base.Team = team;
 
 		NetworkServer.Spawn (go);
 	}
 
 	public static void SetMode(GameType gameMode){
 		instance.mode = gameMode;
-		//instance.DoModeInitialization ();
 	}
 
 	public enum GameType{

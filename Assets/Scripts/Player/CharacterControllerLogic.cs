@@ -176,7 +176,9 @@ public class CharacterControllerLogic : MonoBehaviour
 
             animator.SetFloat("Speed", animSpeed);
 
-            rb3d.AddForce( (transform.forward * leftY * 20f + transform.right * leftX * 20f));
+			Vector3 force = (transform.forward * leftY * 20f + transform.right * leftX * 20f);
+
+            rb3d.AddForce( force );
 
             Vector3 finalVelocity = rb3d.velocity;
 
@@ -186,6 +188,15 @@ public class CharacterControllerLogic : MonoBehaviour
                 finalVelocity.z = finalVelocity.z < 0 ? -10 : 10;
 
             rb3d.velocity = finalVelocity;
+
+			if(force.magnitude <= 0.1f){
+				Vector3 frictionForce = rb3d.velocity;
+
+				frictionForce.x = Mathf.Lerp(frictionForce.x, 0, Time.deltaTime * 10f);
+				frictionForce.z = Mathf.Lerp(frictionForce.z, 0, Time.deltaTime * 10f);
+
+				rb3d.velocity = frictionForce;
+			}
 
 			// Translate controls stick coordinates into world/cam/character space
             StickToWorldspace(this.transform, gamecam.transform, ref direction, ref charSpeed, ref charAngle, IsInPivot());		
