@@ -21,12 +21,13 @@
 /// </summary>
 
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 /// <summary>
 /// #DESCRIPTION OF CLASS#
 /// </summary>
-public class CharacterControllerLogic : MonoBehaviour 
+public class CharacterControllerLogic : NetworkBehaviour
 {
 	#region Variables (private)
 	
@@ -137,6 +138,9 @@ public class CharacterControllerLogic : MonoBehaviour
 	/// </summary>
 	void Update() 
 	{
+		if (!gamecam) {
+			Debug.Log("NO GAME CAM");
+		}
 		if (animator && gamecam.CamState != CamaraJugador.CamStates.FirstPerson)
 		{
 			stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -282,8 +286,14 @@ public class CharacterControllerLogic : MonoBehaviour
 
     public void onDieMessage()
     {
-        this.enabled = false;
+		if(isLocalPlayer)
+        	this.enabled = false;
     }
+
+	public void onAliveMessage(){
+		if(isLocalPlayer)
+			this.enabled = true;
+	}
 
 	public bool IsInJump()
 	{

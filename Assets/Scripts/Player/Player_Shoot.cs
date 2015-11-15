@@ -225,4 +225,7 @@ public class Player_Shoot : NetworkBehaviour {
         this.enabled = false;
     }
 
+	public void onAliveMessage(){
+		this.enabled = true;
+	}
 }

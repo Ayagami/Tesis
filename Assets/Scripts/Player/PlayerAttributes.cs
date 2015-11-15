@@ -14,10 +14,13 @@ public class PlayerAttributes : NetworkBehaviour {
 	private bool initialized = false;
 
 
+	public static PlayerAttributes playerInstance = null;
+
 	void Start(){
 		if (isLocalPlayer) {
 			healthText = GameObject.Find("Health Text").GetComponent<Text>();
 			SetHealthText();
+			playerInstance = this;
 		}
 	}
 
@@ -30,8 +33,9 @@ public class PlayerAttributes : NetworkBehaviour {
 	void Update () {
 		if (!initialized && isLocalPlayer) {
 			if(Team != -1){
-			GameManager_References.setTeam (Team);
-			initialized = true;
+				GameManager_References.instance.setTeam (Team);
+				playerInstance = this;
+				initialized = true;
 			}
 		}
 	}
@@ -47,17 +51,28 @@ public class PlayerAttributes : NetworkBehaviour {
              */
 
             SendMessage("onDieMessage", SendMessageOptions.DontRequireReceiver);
+
 			CmdTellToServerPlayerDies(this.name);
+
             if(isLocalPlayer)
 			    GameManager_References.instance.YouDie.SetActive(true);
+
             this.gameObject.SetActive(false);
+		
+			if(GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_FLAG || GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_POINT && isLocalPlayer){
+				Invoke("AliveEvent", 3f);
+			}
 		}
 	}
 
 	[Command]
 	public void CmdTellToServerPlayerDies(string playerName){
 		GameManager_References.instance.PlayerDies (playerName);
-		Debug.Log ("I'm Running");
+	}
+
+	[Command]
+	public void CmdTellToServerPlayerAlive(string playerName){
+		GameManager_References.instance.PlayerAlive (playerName);
 	}
 
 	void SetHealthText() {
@@ -78,5 +93,16 @@ public class PlayerAttributes : NetworkBehaviour {
             health = 100;
 		SetHealthText();
         CheckIfINeedToDie();
+	}
+
+	void AliveEvent(){
+		this.gameObject.SetActive (true);
+		SendMessage ("onAliveMessage", SendMessageOptions.DontRequireReceiver);
+		TakeDamage (-100);
+
+		if (GameManager_References.instance.TeamWon () == -1 && isLocalPlayer)
+			GameManager_References.instance.YouDie.SetActive (false);
+
+		CmdTellToServerPlayerAlive (this.name);
 	}
 }

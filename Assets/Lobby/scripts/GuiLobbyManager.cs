@@ -93,9 +93,9 @@ public class GuiLobbyManager : NetworkLobbyManager
 		if (GameManager_References.instance == null) {
 			GameManager_References.FindInstance();
 		}
-		if (GameManager_References.instance)
+		if (GameManager_References.instance) {
 			GameManager_References.instance.SetMode ((GameManager_References.GameType)cc.currentMode);
-		else {
+		} else {
 			needToSendGameMode = true;
 			gType = (GameManager_References.GameType)cc.currentMode;
 		}

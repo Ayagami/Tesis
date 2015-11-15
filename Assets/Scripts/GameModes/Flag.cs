@@ -6,7 +6,7 @@ public class Flag : NetworkBehaviour {
 	[SyncVar]
 	public int Team = -1;
 
-	//[SyncVar]
+	[SyncVar]
 	public Transform Parent = null;
 
 	private Transform _transform = null;
@@ -29,6 +29,7 @@ public class Flag : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
 		if (Parent != null && Parent != _transform.parent) {
 			_transform.parent = Parent;
 			_transform.localPosition = Vector3.zero;
@@ -48,7 +49,8 @@ public class Flag : NetworkBehaviour {
 		if (obj.tag == "Player") {
 			if(Parent == null){
 				Player_NetworkSetup PA = obj.gameObject.GetComponent<Player_NetworkSetup>();
-				Parent = PA.FlagPosition;
+				if(isServer)
+					Parent = PA.FlagPosition;
 			}
 		}
 	}

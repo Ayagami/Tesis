@@ -53,6 +53,16 @@ public class Player_NetworkSetup : NetworkBehaviour {
        		 this.CameraInstance.enabled = false;
     }
 
+	public void onAliveMessage(){
+		if (isLocalPlayer) {
+
+			CharacterControllerLogic ccl = GetComponent<CharacterControllerLogic> ();
+			ccl.gamecam = CameraInstance;
+
+			this.CameraInstance.enabled = true;
+		}
+	}
+
 	[Command]
 	void CmdLobby() { /*This code only runs on Server! So... we need to log-out the user.*/
 		var lobby = NetworkLobbyManager.singleton as NetworkLobbyManager;

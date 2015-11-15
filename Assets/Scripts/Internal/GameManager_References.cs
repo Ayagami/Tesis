@@ -11,10 +11,10 @@ public class GameManager_References : NetworkBehaviour {
 	public static GameManager_References instance = null;
 
 	private List<GameObject> Players = null;
+	private List<GameObject> PlayersDied = null;
 
 	[SyncVar]
 	private GameObject WhoWon = null;
-
 
 	[SyncVar]
 	private int teamWon = -1;
@@ -27,9 +27,11 @@ public class GameManager_References : NetworkBehaviour {
 	[SyncVar]
 	public GameType mode = GameType.NORMAL;
 
+	[SyncVar]
+	public bool GameModeSetted = false; 
+
 	[Header("References of GameModes")]
 	public GameObject flagPrefab;
-
 	public Flag_Base[] bases;
 
 	[SyncVar]
@@ -43,6 +45,8 @@ public class GameManager_References : NetworkBehaviour {
 
 	void Start(){
 		Players = new List<GameObject> ();
+		PlayersDied = new List<GameObject> ();
+
 		Time.timeScale = 1;
 		WhoWon = null;
 	}
@@ -76,11 +80,12 @@ public class GameManager_References : NetworkBehaviour {
 	}
 	
 	public void PlayerDies(string playerName){
-		Debug.Log ("Player Dies");
 		for (int i=0; i < Players.Count; i++) {
 			if(Players[i].name == playerName){
 				Debug.Log("REMOVING PLAYER");
-				Players.Remove(Players[i]);
+				GameObject player = Players[i];
+				Players.Remove(player);
+				PlayersDied.Add(player);
 				break;
 			}
 		}
@@ -88,9 +93,24 @@ public class GameManager_References : NetworkBehaviour {
 		CheckWinCondition ();
 	}
 
+	public void PlayerAlive(string playerName){
+		for (int i=0; i < PlayersDied.Count; i++) {
+			if(PlayersDied[i].name == playerName){
+				GameObject player = PlayersDied[i];
+				PlayersDied.Remove(player);
+				Players.Add(player);
+			}
+		}
+
+		CheckWinCondition ();
+	}
+
+	public int TeamWon(){
+		return teamWon;
+	}
+
 	[ClientRpc]
 	void RpcRecieveWhoWon(string playerName){
-		DebugConsole.Log ("RECIEVEWHOWON" + playerName);
 		for (int i=0; i < Players.Count; i++) {
 			if(Players[i].name == playerName){
 				WhoWon = Players[i];
@@ -99,18 +119,22 @@ public class GameManager_References : NetworkBehaviour {
 		}
 		DebugConsole.Log("WhoWon: " + WhoWon.name + " , Me " + localPlayer);
 	}
+
 	[ClientRpc]
 	void RpcRecieveWhoTeamWon(int team){
+		if (localTeam == -1)
+			localTeam = PlayerAttributes.playerInstance.Team;
+
 		DebugConsole.Log ("Team Won " + team + " , my team: " + localTeam);
 		this.teamWon = teamWon;
 	}
 
 	[ServerCallback]
 	void sendWhoWon(){
-		Debug.Log ("SENDING...");
-		DebugConsole.Log ("SENDING");
+		if (!isServer)
+			return;
+
 		if (isServer) {
-			DebugConsole.Log ("I'm A SERVER!");
 			if(mode == GameType.NORMAL)
 				RpcRecieveWhoWon (WhoWon.name);
 			else
@@ -122,20 +146,40 @@ public class GameManager_References : NetworkBehaviour {
 		if (!isServer)
 			return;
 
-		Debug.Log ("CHECKING CONDITION");
 		switch (mode) {
 			case GameType.NORMAL:
-				Debug.Log("NORMAL");
-				Debug.Log(Players.Count);
+
+				if(Players.Count == 0){
+					GameObject[] Possibles = GameObject.FindGameObjectsWithTag("Player");	// esto me va a devolver los Objetos habilitados.. por ende los muertos no cuentan (?
+					Players.Clear();
+					for(int i=0; i < Possibles.Length; i++){
+						if( PlayersDied.IndexOf(Possibles[i]) == -1)
+							Players.Add(Possibles[i]);
+					}
+				}
+
 				if (Players.Count > 0 && Players.Count <= 1) {
 					WhoWon = Players[0];
+					if(isServer){
+						sendWhoWon();
+					}
 				}
-				if(isServer)
-					sendWhoWon();
+				
 			break;
 
 			case GameType.TEAM:
 			int[] PlayersInTeam = new int[4];
+
+			if(Players.Count == 0){
+				GameObject[] Possibles = GameObject.FindGameObjectsWithTag("Player");	// esto me va a devolver los Objetos habilitados.. por ende los muertos no cuentan (?
+				Players.Clear();
+				for(int i=0; i < Possibles.Length; i++){
+					if( PlayersDied.IndexOf(Possibles[i]) == -1)
+						Players.Add(Possibles[i]);
+				}
+			}
+
+
 			for(int i=0; i < Players.Count; i++){
 				PlayersInTeam[Players[i].GetComponent<PlayerAttributes>().Team]++;
 			}
@@ -146,7 +190,6 @@ public class GameManager_References : NetworkBehaviour {
 					howMuchTeamsAreWith1OrMore++;
 			}
 
-			DebugConsole.Log("Hay... " + howMuchTeamsAreWith1OrMore);
 
 			if(howMuchTeamsAreWith1OrMore==1){	// Hay un equipo ganador.
 				teamWon = Players[0].GetComponent<PlayerAttributes>().Team;
@@ -165,22 +208,22 @@ public class GameManager_References : NetworkBehaviour {
 			for(int i=0; i < Players.Count; i++){
 				Debug.Log("Player " + i + " team = " + Players[i].GetComponent<PlayerAttributes>().Team);
 			}
+
 			break;
 		}
 
 	}
 
 	public void setPlayer(string p){
-		DebugConsole.Log ("Ok, seteo mi player " + p);
-		localPlayer = p;
+		this.localPlayer = p;
 	}
 
-	public static void setTeam(int team){
-		DebugConsole.Log ("Ok, seteo mi team " + team);
-		instance.localTeam = team;
+	public void setTeam(int team){
+		this.localTeam = team;
 	}
 	
 	protected void CmdDoModeInitialization(){
+		Debug.Log ("CMD");
 		if (ModeInitialized)
 			return;
 
@@ -190,14 +233,17 @@ public class GameManager_References : NetworkBehaviour {
 			break;
 
 			case GameType.CAPTURE_FLAG:
+				Debug.Log("TEST");
 				GameObject[] Bases = GameObject.FindGameObjectsWithTag("Flag_Bases");
+				DebugConsole.Log("HEY HAY... " + Bases.Length);
 				bases = new Flag_Base[Bases.Length];
+
 				for(int i=0; i < Bases.Length; i++){
 					bases[i] = Bases[i].GetComponent<Flag_Base>();
 					bases[i].Team = i;
 					string iDFlag = "Flag_team" + i;
-					Debug.Log("YAY");
-					CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name, i, iDFlag);
+					if(isServer)
+						CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name, i, iDFlag);
 				}
 			break;
 
@@ -209,23 +255,26 @@ public class GameManager_References : NetworkBehaviour {
 	[Command]
 	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
 
-		GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
-
-		Flag FC = go.GetComponent<Flag> ();
-
-		go.GetComponent<Zombie_ID> ().zombieID = ID;
+		Debug.Log ("Spawning " + ID);
+		DebugConsole.Log ("Spawning " + ID);
 
 		Flag_Base Base = GameObject.Find (parent).GetComponent<Flag_Base> ();
+		//if (Base.currentFlag == null) {
 
-		FC._base = Base;
-		FC.Team = team;
+			GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
 
-		Base.Team = team;
+			Flag FC = go.GetComponent<Flag> ();
 
-		NetworkServer.Spawn (go);
-		Debug.LogError ("ACÁ LLEGUE");
-		Debug.Log ("FLAG SPAWNED");
-	
+			go.GetComponent<Zombie_ID> ().zombieID = ID;
+
+			FC._base = Base;
+			FC.Team = team;
+
+			Base.Team = team;
+
+			NetworkServer.Spawn (go);
+
+		//}
 	}
 
 	public static void FindInstance(){
@@ -238,14 +287,23 @@ public class GameManager_References : NetworkBehaviour {
 		}
 	}
 
-
 	public void SetMode(GameType gameMode){
+		if (GameModeSetted)
+			return;
+
+		GameModeSetted = true;
+
+		Debug.Log ("Setting Mode...");
+		Debug.Log (gameMode);
 
 		instance.mode = gameMode;
-		Debug.Log (gameMode);
+
 		if (isServer) {
+			Debug.Log("Inside");
 			CmdDoModeInitialization ();
 		}
+
+
 	}
 
 	public enum GameType{
