@@ -37,6 +37,9 @@ public class GameManager_References : NetworkBehaviour {
 	[SyncVar]
 	private bool ModeInitialized = false;
 
+
+	private bool iAmServer = false;
+
 	void Awake(){
 		if(instance == null)
 			instance = this;
@@ -205,13 +208,47 @@ public class GameManager_References : NetworkBehaviour {
 			break;
 
 			case GameType.CAPTURE_FLAG:
-			for(int i=0; i < Players.Count; i++){
-				Debug.Log("Player " + i + " team = " + Players[i].GetComponent<PlayerAttributes>().Team);
+
+			for(int i=0; i < bases.Length; i++){
+				if(bases[i].Score >= 3){	// Ese team ganó.
+					teamWon = bases[i].Team;
+					sendWhoWon();
+					break;
+				}
 			}
 
 			break;
 		}
 
+	}
+
+	public void AddScoreToTeamFlag(int team){
+		if (!isServer)
+			return;
+
+		int correctedTeam = team == 1 ? 0 : 1;
+
+		DebugConsole.Log ("Adding score to team " + correctedTeam);
+		this.bases [correctedTeam].Score+=1;
+		DebugConsole.Log ("Score : " + instance.bases [correctedTeam].Score);
+		this.CheckWinCondition ();
+	}
+
+	public void ReSpawnFlagWhenPlayersDisconnect(int Team, string Parent){
+		if (!ImServer())
+			return;
+
+		DebugConsole.Log ("SPAWNING");
+
+		Flag_Base currentBase = bases [Team];
+		string iDFlag = "Flag_Team" + Team;
+
+		CmdTellServerWhereToSpawnFlag (currentBase.transform.position, currentBase.transform.root.eulerAngles, currentBase.name, Team, iDFlag);
+
+	}
+
+	public static bool ImServer(){
+		return instance.iAmServer;
 	}
 
 	public void setPlayer(string p){
@@ -226,6 +263,8 @@ public class GameManager_References : NetworkBehaviour {
 		Debug.Log ("CMD");
 		if (ModeInitialized)
 			return;
+
+		iAmServer = true;
 
 		switch (this.mode) {
 			case  GameType.NORMAL:
@@ -252,29 +291,30 @@ public class GameManager_References : NetworkBehaviour {
 		}
 	}
 
-	[Command]
+	//[Command]
 	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
 
 		Debug.Log ("Spawning " + ID);
 		DebugConsole.Log ("Spawning " + ID);
 
 		Flag_Base Base = GameObject.Find (parent).GetComponent<Flag_Base> ();
-		//if (Base.currentFlag == null) {
 
-			GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
+		GameObject go = Instantiate (flagPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
 
-			Flag FC = go.GetComponent<Flag> ();
+		Flag FC = go.GetComponent<Flag> ();
 
-			go.GetComponent<Zombie_ID> ().zombieID = ID;
+		go.GetComponent<Zombie_ID> ().zombieID = ID;
 
-			FC._base = Base;
-			FC.Team = team;
+		go.name = "FlagTeam-" + ID;
 
-			Base.Team = team;
+		FC._base = Base;
+		FC.Flag_Base = parent;
 
-			NetworkServer.Spawn (go);
+		FC.Team = team;
 
-		//}
+		Base.Team = team;
+
+		NetworkServer.Spawn (go);
 	}
 
 	public static void FindInstance(){

@@ -11,6 +11,9 @@ public class PlayerAttributes : NetworkBehaviour {
 	[SyncVar]
 	public int Team = -1;
 
+	//[SyncVar]
+	public bool hasFlag = false;
+
 	private bool initialized = false;
 
 
@@ -52,16 +55,28 @@ public class PlayerAttributes : NetworkBehaviour {
 
             SendMessage("onDieMessage", SendMessageOptions.DontRequireReceiver);
 
+
 			CmdTellToServerPlayerDies(this.name);
 
             if(isLocalPlayer)
 			    GameManager_References.instance.YouDie.SetActive(true);
 
-            this.gameObject.SetActive(false);
-		
+			if(GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_FLAG){
+				
+				Flag fl = GetComponentInChildren<Flag>();
+				if(fl){
+					fl.onDieMessage();
+				}
+
+			}
+
 			if(GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_FLAG || GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_POINT && isLocalPlayer){
 				Invoke("AliveEvent", 3f);
 			}
+
+			hasFlag = false;
+
+            this.gameObject.SetActive(false);
 		}
 	}
 
