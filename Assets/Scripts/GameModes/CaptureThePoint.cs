@@ -21,7 +21,6 @@ public class CaptureThePoint : NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
 		if (!GameManager_References.ImServer () && !isServer) {
-			DebugConsole.Log("IM NOT A SERVER");
 			return;
 		}
 
@@ -40,11 +39,21 @@ public class CaptureThePoint : NetworkBehaviour {
 
 		updateScore (Time.deltaTime);
 		LerpColors (ColorControl.colors[0], ColorControl.colors[1]);
+		CheckWinCondition ();
 	}
 
 	void updateScore(float delta){
-		if (playersInside.Count <= 0)
+		if (playersInside.Count <= 0) {
+			if(Score > 49.5f && Score < 50.5f){
+				Score = 50f;
+				return;
+			}
+			
+			float desiredDelta = Score > 50 ?  -delta : delta;
+			Score += desiredDelta * 2f;
+		
 			return;
+		}
 
 		int[] teamsInside = new int[2];
 
@@ -52,8 +61,9 @@ public class CaptureThePoint : NetworkBehaviour {
 			teamsInside[playersInside[i].Team] += 1;
 		}
 
-		if (teamsInside [0] == teamsInside [1] && teamsInside [0] == 0)
+		if (teamsInside [0] == teamsInside [1] && teamsInside [0] == 0) {
 			return;
+		}
 
 		if (teamsInside [0] != 0 || teamsInside [1] != 0) {
 			if(teamsInside[0] != 0 && teamsInside[1] != 0)
@@ -64,9 +74,20 @@ public class CaptureThePoint : NetworkBehaviour {
 			}else{
 				Score += delta * teamsInside[1];
 			}
-
-			DebugConsole.Log("" + Score);
 		}
+	}
+
+	void CheckWinCondition(){
+		if (!GameManager_References.ImServer () && !isServer) {
+			return;
+		}
+
+		if (Score <= 0)
+			GameManager_References.instance.PointModeWinner (0);
+		if (Score >= 100)
+			GameManager_References.instance.PointModeWinner (1);
+
+
 	}
 
 	void OnColorChange(Color newColor){
@@ -79,6 +100,9 @@ public class CaptureThePoint : NetworkBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
+		if (!GameManager_References.ImServer () && !isServer)
+			return;
+
 		if (col.tag == "Player") {
 			PlayerAttributes PA = col.GetComponent<PlayerAttributes>();
 			if(playersInside.IndexOf(PA) == -1){
@@ -86,8 +110,11 @@ public class CaptureThePoint : NetworkBehaviour {
 			}
 		}
 	}
-
+	
 	void OnTriggerExit(Collider col){
+		if (!GameManager_References.ImServer () && !isServer)
+			return;
+
 		if (col.tag == "Player") {
 			PlayerAttributes PA = col.GetComponent<PlayerAttributes>();
 			if(playersInside.IndexOf(PA) != -1){
@@ -99,9 +126,10 @@ public class CaptureThePoint : NetworkBehaviour {
 	void LerpColors(Color from, Color to){
 		Color aux = from;
 
-		aux.r = Mathf.Lerp (aux.r, to.r, Score / 100);
-		aux.g = Mathf.Lerp (aux.g, to.g, Score / 100);
-		aux.b = Mathf.Lerp (aux.b, to.b, Score / 100);
+		aux.r = Mathf.Lerp (from.r, to.r, Score / 100);
+		aux.g = Mathf.Lerp (from.g, to.g, Score / 100);
+		aux.b = Mathf.Lerp (from.b, to.b, Score / 100);
+		aux.a = 0.5f;
 
 		CurrentColor = aux;
 	}

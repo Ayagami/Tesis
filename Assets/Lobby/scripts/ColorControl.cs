@@ -57,7 +57,7 @@ public class ColorControl : NetworkBehaviour
 	public void ClientChangeColor()
 	{
 		indexColor++;
-		int whatToConsider = currentMode == LobbyGameMode.Flag ? 1 : colors.Length - 1;
+		int whatToConsider = (currentMode == LobbyGameMode.Flag || currentMode == LobbyGameMode.Point) ? 1 : colors.Length - 1;
 		if (indexColor > whatToConsider)
 			indexColor = 0;
 
@@ -83,7 +83,7 @@ public class ColorControl : NetworkBehaviour
 	void OnMyMode(LobbyGameMode mode){
 		currentMode = mode;
 
-		if (currentMode == LobbyGameMode.Flag && indexColor > 1) {
+		if ( (currentMode == LobbyGameMode.Flag || currentMode == LobbyGameMode.Point) && indexColor > 1) {
 			OnMyColor(colors[0]);
 			CmdSetMyColor (colors [0]);
 		}

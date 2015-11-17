@@ -78,6 +78,10 @@ public class GameManager_References : NetworkBehaviour {
 					YouWin.SetActive(true);
 					YouDie.SetActive(false);
 				}
+				else{
+					YouWin.SetActive(false);
+					YouDie.SetActive(true);
+				}
 			}
 		}
 	}
@@ -134,7 +138,7 @@ public class GameManager_References : NetworkBehaviour {
 
 	[ServerCallback]
 	void sendWhoWon(){
-		if (!isServer)
+		if (!isServer && !ImServer())
 			return;
 
 		if (isServer) {
@@ -143,6 +147,19 @@ public class GameManager_References : NetworkBehaviour {
 			else
 				RpcRecieveWhoTeamWon(teamWon);
 		}
+	}
+
+	public void PointModeWinner(int Team){
+		if (!isServer && !ImServer())
+			return;
+
+		if (teamWon != -1)
+			return;
+
+		DebugConsole.Log ("Team Won " + Team);
+		teamWon = Team;
+
+		sendWhoWon ();
 	}
 
 	void CheckWinCondition(){
