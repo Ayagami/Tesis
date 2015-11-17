@@ -27,6 +27,9 @@ public class GuiLobbyManager : NetworkLobbyManager
 		offlineCanvas.Show();
 	}
 
+	public void setMaxPlayers(int max){
+		this.maxPlayers = max;
+	}
 
 	void FixedUpdate(){
 		if (needToSendGameMode) {
@@ -144,9 +147,6 @@ public class GuiLobbyManager : NetworkLobbyManager
 	{
 		lobbyCanvas.Show();
 		onlineCanvas.Show(onlineStatus);
-
-		//exitToLobbyCanvas.Hide();
-
 	}
 
 	public override void OnLobbyClientExit()

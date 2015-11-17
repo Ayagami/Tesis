@@ -78,8 +78,7 @@ public class PlayerCanvasHooks : MonoBehaviour
 		removeButton.gameObject.SetActive(true);
 	}
 
-	public void SetColor(Color color)
-	{
+	public void SetColor(Color color) {
 		colorButton.GetComponent<Image>().color = color;
 	}
 
@@ -91,21 +90,26 @@ public class PlayerCanvasHooks : MonoBehaviour
 		switch (parsedMode) {
 		case ColorControl.LobbyGameMode.Single:
 			modeText.text = "Mode:Single";
-
+			if(isTheServer)
+				GuiLobbyManager.s_Singleton.setMaxPlayers(4);
 			colorButton.interactable = false;
 			break;
 		case ColorControl.LobbyGameMode.Double:
 			modeText.text = "Mode:Double";
-
+			if(isTheServer)
+				GuiLobbyManager.s_Singleton.setMaxPlayers(4);
 			colorButton.interactable = true;
 			break;
 		case ColorControl.LobbyGameMode.Point:
 			modeText.text = "Mode:Point";
-
+			if(isTheServer)
+				GuiLobbyManager.s_Singleton.setMaxPlayers(6);
 			colorButton.interactable = true;
 			break;
 		case ColorControl.LobbyGameMode.Flag:
 			modeText.text = "Mode:Flag";
+			if(isTheServer)
+				GuiLobbyManager.s_Singleton.setMaxPlayers(4);
 			colorButton.interactable = true;
 			break;
 		}
