@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class CaptureThePoint : NetworkBehaviour {
 
+	[SyncVar]
 	public float Score = 50f;
 
 	private List<PlayerAttributes> playersInside;
@@ -20,17 +21,20 @@ public class CaptureThePoint : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		matReference = GetComponent<Renderer> ().sharedMaterial;
+		
+		initial = Score;
+		
+		CurrentColor.a = 0.1f;
+		matReference.color = CurrentColor;
+
+		GameManager_References.instance.SetPointReference (this);
+
 		if (!GameManager_References.ImServer () && !isServer) {
 			return;
 		}
-
 		playersInside = new List<PlayerAttributes> ();
-		matReference = GetComponent<Renderer> ().sharedMaterial;
 
-		initial = Score;
-
-		CurrentColor.a = 0.1f;
-		matReference.color = CurrentColor;
 	}
 
 	void FixedUpdate(){
@@ -97,6 +101,10 @@ public class CaptureThePoint : NetworkBehaviour {
 
 		CurrentColor = newColor;
 		matReference.color = CurrentColor;
+	}
+
+	public Color ColorReference(){
+		return CurrentColor;
 	}
 
 	void OnTriggerEnter(Collider col){

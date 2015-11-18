@@ -41,7 +41,9 @@ public class BulletBehaviour : NetworkBehaviour {
 				Debug.Log("IMPACT");
 			}
 		}
-		Destroy(gameObject);
+
+		if(obj.tag != "Point_Base")
+			Destroy(gameObject);
 	}
 
 	[Command]

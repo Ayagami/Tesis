@@ -70,7 +70,8 @@ public class PlayerAttributes : NetworkBehaviour {
 
 			}
 
-			if(GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_FLAG || GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_POINT && isLocalPlayer){
+			if( GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_FLAG || GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_POINT){
+				DebugConsole.Log("Invoking Alive");
 				Invoke("AliveEvent", 3f);
 			}
 
@@ -113,7 +114,7 @@ public class PlayerAttributes : NetworkBehaviour {
 	void AliveEvent(){
 		this.gameObject.SetActive (true);
 		SendMessage ("onAliveMessage", SendMessageOptions.DontRequireReceiver);
-		TakeDamage (-100);
+		this.health = 100;
 
 		if (GameManager_References.instance.TeamWon () == -1 && isLocalPlayer)
 			GameManager_References.instance.YouDie.SetActive (false);

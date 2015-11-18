@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager_References : NetworkBehaviour {
 
@@ -34,11 +35,19 @@ public class GameManager_References : NetworkBehaviour {
 	public GameObject flagPrefab;
 	public Flag_Base[] bases;
 
+
+	public GameObject pointPrefab;
+
+
+	private CaptureThePoint pointReference = null;
+
 	[SyncVar]
 	private bool ModeInitialized = false;
-
-
+	
 	private bool iAmServer = false;
+
+	public Scrollbar sbar;
+	private Image sbar_image;
 
 	void Awake(){
 		if(instance == null)
@@ -52,9 +61,20 @@ public class GameManager_References : NetworkBehaviour {
 
 		Time.timeScale = 1;
 		WhoWon = null;
+
+		if(sbar){
+			sbar_image  = sbar.GetComponent<Image>();
+		}
+
+	}
+
+	public void SetPointReference(CaptureThePoint re){
+		pointReference = re;
+		sbar.gameObject.SetActive (true);
 	}
 
 	void Update(){
+
 		if(!isEnabled){
 				GameObject[] P = GameObject.FindGameObjectsWithTag("Player");
 				foreach(GameObject player in P){
@@ -84,19 +104,23 @@ public class GameManager_References : NetworkBehaviour {
 				}
 			}
 		}
+
+		if (pointReference) {
+			sbar_image.color = pointReference.ColorReference();
+			sbar.value = pointReference.Score / 100;
+		}
+
 	}
 	
 	public void PlayerDies(string playerName){
 		for (int i=0; i < Players.Count; i++) {
 			if(Players[i].name == playerName){
-				Debug.Log("REMOVING PLAYER");
 				GameObject player = Players[i];
 				Players.Remove(player);
 				PlayersDied.Add(player);
 				break;
 			}
 		}
-
 		CheckWinCondition ();
 	}
 
@@ -135,6 +159,13 @@ public class GameManager_References : NetworkBehaviour {
 		DebugConsole.Log ("Team Won " + team + " , my team: " + localTeam);
 		this.teamWon = teamWon;
 	}
+
+	//[ClientRpc]
+	/*void RpcEnablePointBase(){
+		if (pointBase) {
+			pointBase.gameObject.SetActive(true);
+		}
+	}*/
 
 	[ServerCallback]
 	void sendWhoWon(){
@@ -304,11 +335,27 @@ public class GameManager_References : NetworkBehaviour {
 			break;
 
 			case GameType.CAPTURE_POINT:
+				/*if(pointBase){
+					pointBase.gameObject.SetActive(true);
+					//RpcEnablePointBase();
+				}*/
+
+				GameObject point = GameObject.FindGameObjectWithTag("PointLocation");
+				string id = "Point-" + Random.Range(0,10);
+				if(isServer){
+					CmdTellServerWhereToSpawnPoint(point.transform.position, point.transform.rotation.eulerAngles, id);
+				}
 			break;
 		}
 	}
 
-	//[Command]
+	void CmdTellServerWhereToSpawnPoint(Vector3 tPos, Vector3 tRot, string ID){
+		GameObject go = Instantiate (pointPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
+		go.GetComponent<Zombie_ID> ().zombieID = ID;
+		go.name = "CaptureThePoint-" + ID;
+		NetworkServer.Spawn (go);
+
+	}
 	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
 
 		Debug.Log ("Spawning " + ID);
@@ -362,6 +409,20 @@ public class GameManager_References : NetworkBehaviour {
 
 
 	}
+	/*
+
+	[Command]
+	void CmdLobby() { //This code only runs on Server! So... we need to log-out the user.
+		var lobby = NetworkLobbyManager.singleton as NetworkLobbyManager;
+		if (lobby) {
+			NetworkManager.singleton.ServerChangeScene(lobby.lobbyScene);
+			NetworkManager.singleton.StopHost();
+		}
+	}
+
+	public void Exit() {
+		CmdLobby();
+	}*/
 
 	public enum GameType{
 		NORMAL,
