@@ -292,10 +292,12 @@ public class GameManager_References : NetworkBehaviour {
 		string iDFlag = "Flag_Team" + Team;
 
 		CmdTellServerWhereToSpawnFlag (currentBase.transform.position, currentBase.transform.root.eulerAngles, currentBase.name, Team, iDFlag);
-
 	}
 
 	public static bool ImServer(){
+		if (!instance)
+			return false;
+
 		return instance.iAmServer;
 	}
 

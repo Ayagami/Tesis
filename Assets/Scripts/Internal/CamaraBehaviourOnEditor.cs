@@ -27,6 +27,9 @@ public class CamaraBehaviourOnEditor : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+		if (!ObjectsManagersInEditor.GetInstance ().IsInEditMode ())
+			return;
+
 		ScrollWheelBehaviour ();
 		MovementBehaviour ();
 		RotationBehaviour ();
@@ -34,7 +37,7 @@ public class CamaraBehaviourOnEditor : MonoBehaviour {
 	}
 
 	void OnDrawGizmosSelected(){
-		Gizmos.DrawLine (transform.position, LookAtAwake);
+		Gizmos.DrawLine (transform.position, getTarget());
 	}
 
 	void ScrollWheelBehaviour(){
@@ -48,8 +51,8 @@ public class CamaraBehaviourOnEditor : MonoBehaviour {
 	}
 
 	void RotationFromPivot(){
-		transform.RotateAround (LookAtAwake, transform.up,    Input.GetAxis ("Mouse X") * Time.deltaTime * pivotVerticalSpeed);
-		transform.RotateAround (LookAtAwake, transform.right, Input.GetAxis ("Mouse Y") * Time.deltaTime * pivotHorizontalSpeed);
+		transform.RotateAround (getTarget(), transform.up,    Input.GetAxis ("Mouse X") * Time.deltaTime * pivotVerticalSpeed);
+		transform.RotateAround (getTarget(), transform.right, Input.GetAxis ("Mouse Y") * Time.deltaTime * pivotHorizontalSpeed);
 	}
 
 	void BasicRotation(){
@@ -71,17 +74,24 @@ public class CamaraBehaviourOnEditor : MonoBehaviour {
 	void ResetToDefault(){
 		transform.position = InitialPosition;
 		transform.rotation = Quaternion.identity;
-		LookAtTarget (LookAtAwake);
+		LookAtTarget (getTarget());
 	}
 
 	void OtherInputs(){
 		if (Input.GetKeyDown (KeyCode.Space))
 			ResetToDefault ();
 		if (Input.GetKeyDown (KeyCode.LeftAlt))
-			LookAtTarget (LookAtAwake);
+			LookAtTarget (getTarget());
 	}
 
 	void LookAtTarget(Vector3 target){
 		transform.LookAt (target);
+	}
+
+	Vector3 getTarget(){
+		if (ObjectsManagersInEditor.GetInstance ().currentSelectedObject == null)
+			return Vector3.zero;
+		else
+			return ObjectsManagersInEditor.GetInstance ().currentSelectedObject.transform.position;
 	}
 }
