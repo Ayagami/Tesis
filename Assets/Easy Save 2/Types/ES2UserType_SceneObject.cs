@@ -11,7 +11,9 @@ public class ES2UserType_SceneObject : ES2Type
 		SceneObject data = (SceneObject)obj;
 		// Add your writer.Write calls here.
 		writer.Write(data.prefab);
-		writer.Write(data._transform);
+		writer.Write(data.pos);
+		writer.Write(data.rot);
+		writer.Write(data.scale);
 
 	}
 	
@@ -20,7 +22,9 @@ public class ES2UserType_SceneObject : ES2Type
 		SceneObject data = new SceneObject();
 		// Add your reader.Read calls here and return your object.
 		data.prefab = reader.Read<SceneTypePrefab>();
-		reader.Read<UnityEngine.Transform>();
+		data.pos = reader.Read<UnityEngine.Vector3>();
+		data.rot = reader.Read<UnityEngine.Vector3>();
+		data.scale = reader.Read<UnityEngine.Vector3>();
 
 		return data;
 	}

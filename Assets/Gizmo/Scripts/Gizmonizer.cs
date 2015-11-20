@@ -53,7 +53,7 @@ public class Gizmonizer : MonoBehaviour
 		if (!gizmoObj) {
 			instance.removeGizmo();
 			instance = this;
-			ObjectsManagersInEditor.GetInstance().currentSelectedObject = this.transform;
+			ObjectsManagersInEditor.GetInstance().setCurrentSelectedObject(this.transform);
 			resetGizmo();
 		}
 	}
