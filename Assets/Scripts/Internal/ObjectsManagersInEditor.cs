@@ -76,6 +76,11 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 	void Start () {
 		objectsSpawned = new List<GameObject> ();
 
+		GameObject CanvasHookManager = GameObject.Find ("OfflineControlCanvas(Clone)") as GameObject;
+		if (CanvasHookManager) {
+			Destroy(CanvasHookManager);
+		}
+
 		newLevelHandler.Init (BaseMaps);
 		panelLoadLevelHandler.SetLevels (this.levels);
 
@@ -262,5 +267,9 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 		objectsSpawned.Remove (go);
 		Destroy (go);
 
+	}
+
+	public void GoToMenu(){
+		Application.LoadLevel (0);
 	}
 }
