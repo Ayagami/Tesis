@@ -64,36 +64,22 @@ public class Player_NetworkSetup : NetworkBehaviour {
 			this.CameraInstance.enabled = true;
 		}
 	}
-
+	/*
 	[Command]
-	void CmdLobby() { /*This code only runs on Server! So... we need to log-out the user.*/
+	void CmdLobby() { 
 		var lobby = NetworkLobbyManager.singleton as NetworkLobbyManager;
 		if (lobby) {
 			NetworkManager.singleton.ServerChangeScene(lobby.lobbyScene);
 			NetworkManager.singleton.StopHost();
 		}
-	}
+	}*/
 
 	void InvokeMe(){
 		Vector3 resp = GameManager_References.instance.GetRandomSpawnPoint ();
+		DebugConsole.Log ("SPAWN RETURN " + resp);
 		transform.position = resp;
 	}
-
 	/*
-	[Command]
-	void CmdAskForSpawn(string id){
-		Vector3 resp = GameManager_References.instance.GetRandomSpawnPoint ();
-		RpcReturnSpawnPoint (resp.x, resp.y, resp.z, id);
-	}
-
-	[ClientRpc]
-	void RpcReturnSpawnPoint(float x, float y, float z, string id){
-		if (id == transform.name) {
-			transform.position = new Vector3(x,y,z);
-		}
-	}
-	*/
-
 	[ClientCallback]
 	void OnGUI() {
 		if (!isLocalPlayer) {
@@ -103,7 +89,7 @@ public class Player_NetworkSetup : NetworkBehaviour {
 		if (GUI.Button(new Rect(360, 30, 100, 20), "Exit")) {
 				CmdLobby();
 		}
-	}
+	}*/
 
 	
 	void OnColorChanged(Color newColor){
