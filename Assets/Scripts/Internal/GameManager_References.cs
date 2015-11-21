@@ -119,7 +119,7 @@ public class GameManager_References : NetworkBehaviour {
 				return Spawns[Random.Range(0,Spawns.Length)].transform.position;
 		}
 
-		return new Vector3(0,5,0);
+		return new Vector3(0,10,0);
 	}
 
 	void Update(){
@@ -441,7 +441,6 @@ public class GameManager_References : NetworkBehaviour {
 			break;
 			case SceneTypePrefab.BASE_FLAG:
 				go = Instantiate(prefabsFromLevelEditor[1]) as GameObject;
-				//go.name = "Flag-Base";
 				bases.Add(go.GetComponent<Flag_Base>());
 				bases[bases.Count-1].desiredName = "Flag-Base " + Random.Range(0,100);
 				go.name = bases[bases.Count-1].desiredName;
@@ -460,7 +459,7 @@ public class GameManager_References : NetworkBehaviour {
 
 		if (go) {
 			go.transform.position = pos;
-			go.transform.rotation = Quaternion.Euler ( rot);
+			go.transform.rotation = Quaternion.Euler (rot);
 			go.transform.localScale = scale;
 			go.GetComponent<SyncScaleForLevel>().desiredScale = scale;
 			NetworkServer.Spawn (go);
@@ -559,22 +558,7 @@ public class GameManager_References : NetworkBehaviour {
 			CmdDoModeInitialization ();
 		}
 
-
 	}
-	/*
-
-	[Command]
-	void CmdLobby() { //This code only runs on Server! So... we need to log-out the user.
-		var lobby = NetworkLobbyManager.singleton as NetworkLobbyManager;
-		if (lobby) {
-			NetworkManager.singleton.ServerChangeScene(lobby.lobbyScene);
-			NetworkManager.singleton.StopHost();
-		}
-	}
-
-	public void Exit() {
-		CmdLobby();
-	}*/
 
 	public enum GameType{
 		NORMAL,

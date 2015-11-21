@@ -73,6 +73,8 @@ public class CharacterControllerLogic : NetworkBehaviour
 
 	private Rigidbody rb3d;
     private Bounds CapsuleBound;
+
+	public Player_NetworkSetup PNS;
 	
 	// Hashes
   /*  private int m_LocomotionId = 0;
@@ -119,6 +121,7 @@ public class CharacterControllerLogic : NetworkBehaviour
         CapsuleBound = capCollider.bounds;
 		capsuleHeight = capCollider.height;
 		rb3d = this.GetComponent<Rigidbody> ();
+		//PNS = this.GetComponent<Player_NetworkSetup> ();
 		/*
 		if(animator.layerCount >= 2)
 		{
@@ -138,6 +141,10 @@ public class CharacterControllerLogic : NetworkBehaviour
 	/// </summary>
 	void Update() 
 	{
+		if (!PNS)
+			return;
+		if (!PNS.GameStarted)
+			return;
 		if (!gamecam) {
 			Debug.Log("NO GAME CAM");
 		}

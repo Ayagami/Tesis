@@ -18,6 +18,7 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 	public Transform FlagPosition = null;
 
+	public bool GameStarted = false;
 
 	// Use this for initialization
 	public override void OnStartLocalPlayer () {
@@ -25,7 +26,9 @@ public class Player_NetworkSetup : NetworkBehaviour {
 			GameObject.Find ("Scene Camera").SetActive (false);
 
 			CharacterControllerLogic ccl = GetComponent<CharacterControllerLogic> ();
-			ccl.enabled = true;
+			ccl.enabled = false;
+
+			ccl.PNS = this;
 
 			GetComponentInChildren<Camera> ().enabled = true;
 
@@ -41,7 +44,7 @@ public class Player_NetworkSetup : NetworkBehaviour {
 			AudioListener AL = GetComponentInChildren<AudioListener> ();
 			AL.enabled = true;
 
-			Invoke ("InvokeMe", 3f);
+			Invoke ("InvokeMe", 5f);
 		}
 		GetComponent<NetworkAnimator> ().SetParameterAutoSend (0, true);
 	}
@@ -78,7 +81,13 @@ public class Player_NetworkSetup : NetworkBehaviour {
 		Vector3 resp = GameManager_References.instance.GetRandomSpawnPoint ();
 		DebugConsole.Log ("SPAWN RETURN " + resp);
 		transform.position = resp;
+
+		CharacterControllerLogic ccl = GetComponent<CharacterControllerLogic> ();
+		ccl.enabled = true;
+
+		GameStarted = true;
 	}
+
 	/*
 	[ClientCallback]
 	void OnGUI() {
