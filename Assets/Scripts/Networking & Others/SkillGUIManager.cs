@@ -64,25 +64,25 @@ public class SkillGUIManager : MonoBehaviour {
 				case SpellTypes.FIRE:
 				case SpellTypes.FIRE1:
 				case SpellTypes.FIRE2:
-					UI[i].sprite = Graphics[0];
+					UI[i].sprite = Graphics[31];
 					break;
 
 				case SpellTypes.WATER:
 				case SpellTypes.WATER1:
 				case SpellTypes.WATER2:
-					UI[i].sprite = Graphics[1];
+					UI[i].sprite = Graphics[12];
 					break;
 
 				case SpellTypes.ROCK:
 				case SpellTypes.ROCK1:
 				case SpellTypes.ROCK2:
-					UI[i].sprite = Graphics[2];
+					UI[i].sprite = Graphics[24];
 					break;
 
 				case SpellTypes.AIR:
 				case SpellTypes.AIR1:
 				case SpellTypes.AIR2:
-					UI[i].sprite = Graphics[3];
+					UI[i].sprite = Graphics[29];
 					break;
 			
 				case SpellTypes.LIGHT:
@@ -94,31 +94,31 @@ public class SkillGUIManager : MonoBehaviour {
 				case SpellTypes.FROST:
 				case SpellTypes.FROST1:
 				case SpellTypes.FROST2:
-					UI[i].sprite = Graphics[5];
+					UI[i].sprite = Graphics[27];
 					break;
 
 				case SpellTypes.SHADOW:
 				case SpellTypes.SHADOW1:
 				case SpellTypes.SHADOW2:
-					UI[i].sprite = Graphics[6];
+					UI[i].sprite = Graphics[34];
 					break;
 
 				case SpellTypes.LIGHTNING:
 				case SpellTypes.LIGHTNING1:
 				case SpellTypes.LIGHTNING2:
-					UI[i].sprite = Graphics[7];
+					UI[i].sprite = Graphics[18];
 					break;
 
 				case SpellTypes.LIFE:
 				case SpellTypes.LIFE1:
 				case SpellTypes.LIFE2:
-					UI[i].sprite = Graphics[8];
+					UI[i].sprite = Graphics[36];
 					break;
 
 				case SpellTypes.ARCANE:
 				case SpellTypes.ARCANE1:
 				case SpellTypes.ARCANE2:
-					UI[i].sprite = Graphics[9];
+					UI[i].sprite = Graphics[23];
 					break;
 				default:
 					break;
