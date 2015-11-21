@@ -22,12 +22,22 @@ public class Gizmonizer : MonoBehaviour
 	}
 	void Update () 
 	{
+
+		if (!ObjectsManagersInEditor.GetInstance ().IsInEditMode ())
+			return;
+
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			ObjectsManagersInEditor.GetInstance().ClearCurrentObject();
 			removeGizmo ();
 		}
-		
+
 		if (gizmo) {
+
+			if (Input.GetKeyDown (KeyCode.Backspace)) {
+				ObjectsManagersInEditor.GetInstance().ClearCurrentObject();
+				ObjectsManagersInEditor.GetInstance().DestroyObject(this.gameObject);
+			}
+
 			if (Input.GetKeyDown(KeyCode.Alpha1)) 
 			{
 				gizmo_type = GizmoHandle.Gizmo_Type.Gizmo_Position;
@@ -47,6 +57,13 @@ public class Gizmonizer : MonoBehaviour
 		}
 	}
 
+	/*
+	void FixedUpdate(){
+		if (gizmoObj) {
+			gizmoObj.transform.localScale = gizmoAxis.transform.localScale;
+			gizmoObj.transform.localScale *= gizmoSize + (Vector3.Distance(transform.position, Camera.main.transform.position)/30);
+		}
+	}*/
 
 	void OnMouseDown() 
 	{
@@ -57,7 +74,6 @@ public class Gizmonizer : MonoBehaviour
 			resetGizmo();
 		}
 	}
-
 	void removeGizmo() 
 	{
 		if (gizmoObj) 

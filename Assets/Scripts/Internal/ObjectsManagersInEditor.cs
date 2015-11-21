@@ -21,9 +21,6 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 	[Header("BaseMaps")]
 	public GameObject[] BaseMaps;
 
-	[Header("ObjectsSpawneables")]
-	public GameObject[] ObjectsSpawneables;
-
 	private static ObjectsManagersInEditor Instance;
 
 	public static ObjectsManagersInEditor GetInstance(){
@@ -34,7 +31,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 
 
 	[Header("LevelAttributes")]
-	private string CurrentlevelName;
+	private string CurrentlevelName = "";
 	private int CurrentBaseLevel;
 
 
@@ -95,6 +92,10 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 		if (!checkIfCanSpawn (Prefabs [id].GetComponent<PrefabsInScene> ().type))
 			return;
 
+		if(CurrentlevelName == ""){
+			newLevelHandler.Show();
+			return;
+		}
 
 		GameObject go = Instantiate (Prefabs [id], Vector3.zero, Quaternion.identity) as GameObject;
 
@@ -105,7 +106,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 
 		Gizmonizer g = go.AddComponent<Gizmonizer> ();
 		g.gizmoAxis = gizmoPrefab;
-		g.gizmoSize = 0.5f;
+		g.gizmoSize = 1;
 
 	}
 
@@ -154,7 +155,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 
 		if (objectsSpawned.Count <= 0)
 			return true;
-		Debug.Log ("INSIDE SWITCH");
+
 		switch (type) {
 			case SceneTypePrefab.BASE_FLAG:
 				int c = 0;
@@ -168,8 +169,6 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 						}
 					}
 				}
-
-				Debug.Log(c);
 
 				if(c >= FlagsLimit)
 					return false;
@@ -191,7 +190,6 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 				}
 			}
 
-			Debug.Log(x);
 			if(x >= PointsLimit)
 				return false;
 			else 
@@ -204,6 +202,9 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 	}
 
 	public void SaveLevel(){
+		if (CurrentlevelName == "")
+			return;
+
 		LevelParser.Save (CurrentlevelName, objectsSpawned);
 	}
 
@@ -223,30 +224,28 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 			switch(theLevel.obj[i].prefab){
 				case SceneTypePrefab.COLLISEUM:
 					SpawnBaseLevel(0);
-				AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
 				break;
 
 				case SceneTypePrefab.BASE_FLAG:
 					AddPrefabObjectToScene(2);
-				AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
 				break;
 
 				case SceneTypePrefab.BASE_POINT:
 					AddPrefabObjectToScene(1);
-				AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
 				break;
 
 				case SceneTypePrefab.SPAWN_POINT:
 					AddPrefabObjectToScene(0);
-				AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
 				break;
 			}
 		}
 	}
 
 	private void AssignTransform(GameObject go, Vector3 pos, Vector3 rot, Vector3 scale){
-		Debug.Log (pos);
-
 		go.transform.position = pos;
 		go.transform.rotation = Quaternion.Euler(rot);
 		go.transform.localScale = scale;
@@ -254,5 +253,14 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 
 	public void UpdateLevels(List<string> levels){
 		this.levels = levels;
+	}
+
+	public void DestroyObject(GameObject go){
+		if (!IsInEditMode ())
+			return;
+
+		objectsSpawned.Remove (go);
+		Destroy (go);
+
 	}
 }
