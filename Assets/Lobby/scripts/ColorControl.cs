@@ -18,7 +18,11 @@ public class ColorControl : NetworkBehaviour
 	[SyncVar(hook="OnMyMode")]
 	public LobbyGameMode currentMode = LobbyGameMode.Single;
 
+	[SyncVar(hook="OnMyLevel")]
+	public string currentLevel = "Default";
+
 	public static LobbyGameMode staticMode = LobbyGameMode.Single;
+	public static string staticLevel = "Default";
 
 	[SyncVar(hook="OnMyColor")]
 	public Color myColor = Color.white;
@@ -53,6 +57,10 @@ public class ColorControl : NetworkBehaviour
 		currentMode = (LobbyGameMode)mode;
 	}
 
+	[Command]
+	void CmdSetMyLevel(string level){
+		currentLevel = level;
+	}
 
 	public void ClientChangeColor()
 	{
@@ -74,6 +82,11 @@ public class ColorControl : NetworkBehaviour
 		CmdSetMyMode (indexMode);
 	}
 
+	public void ServerChangeLevel(string newLevel){
+
+		CmdSetMyLevel (newLevel);
+	}
+
 	void OnMyColor(Color newColor)
 	{
 		myColor = newColor;
@@ -92,6 +105,13 @@ public class ColorControl : NetworkBehaviour
 		playerUI.SetMode ((int)mode);
 	}
 
+	void OnMyLevel(string level){
+		currentLevel = level;
+
+		staticLevel = currentLevel;
+		playerUI.SetLevel (level);
+	}
+
 	void Update()
 	{
 		if (!isLocalPlayer)
@@ -101,5 +121,8 @@ public class ColorControl : NetworkBehaviour
 	void FixedUpdate(){
 		if (staticMode != currentMode)
 			currentMode = staticMode;
+
+		if (staticLevel != currentLevel)
+			currentLevel = staticLevel;
 	}
 }

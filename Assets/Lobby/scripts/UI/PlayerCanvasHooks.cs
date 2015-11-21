@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class PlayerCanvasHooks : MonoBehaviour
@@ -11,11 +12,13 @@ public class PlayerCanvasHooks : MonoBehaviour
 	public CanvasHook OnColorChangeHook;
 	public CanvasHook OnRemoveHook;
 	public CanvasHook OnModeChangeHook;
+	public CanvasHook onLevelChangeHook;
 
 	public Button playButton;
 	public Button colorButton;
 	public Button removeButton;
 	public Button ModeButton;
+	public Dropdown dropdownLevel;
 
 
 	public Text modeText;
@@ -30,15 +33,19 @@ public class PlayerCanvasHooks : MonoBehaviour
 
 
 	public ColorControl.LobbyGameMode mode = ColorControl.LobbyGameMode.Single;
+	public string level = "Default";
 
 	public static PlayerCanvasHooks ServerCanvas = null;
 	public PlayerLobby LobbyData = null;
+
+	public List<string> levels;
 
 
 	void Awake() {
 		removeButton.gameObject.SetActive(false);
 		colorButton.interactable = false;
 		ModeButton.interactable = false;
+		dropdownLevel.interactable = false;
 
 		if (ServerCanvas == null) {
 			ServerCanvas = this;
@@ -69,13 +76,32 @@ public class PlayerCanvasHooks : MonoBehaviour
 			OnModeChangeHook.Invoke ();
 	}
 
+	public void UILevelMode(){
+		if (onLevelChangeHook != null)
+			onLevelChangeHook.Invoke ();
+	}
+
 	public void SetLocalPlayer() {
 		isLocalPlayer = true;
 		nameText.text = "YOU";
 		readyText.text = "Play";
-		if (isTheServer)
+		if (isTheServer) {
 			ModeButton.interactable = true;
-		removeButton.gameObject.SetActive(true);
+			dropdownLevel.interactable = true;
+
+			Dropdown.OptionData last = new Dropdown.OptionData ("Default");
+			dropdownLevel.options.Add( last );
+
+			this.levels = LevelParser.LoadLevelList();
+			for(int i=0; i < levels.Count; i++){
+				Dropdown.OptionData option = new Dropdown.OptionData (levels[i]);
+				dropdownLevel.options.Add( option );
+			}
+
+			dropdownLevel.value = 0;
+			dropdownLevel.GetComponentInChildren<Text>().text = "Default";
+		}
+		removeButton.gameObject.SetActive(false);
 	}
 
 	public void SetColor(Color color) {
@@ -113,8 +139,14 @@ public class PlayerCanvasHooks : MonoBehaviour
 			colorButton.interactable = true;
 			break;
 		}
-
 	}
+
+	public void SetLevel(string level){
+		ServerCanvas.level = level;
+
+		dropdownLevel.GetComponentInChildren<Text> ().text = level;
+	}
+
 	public void SetReady(bool ready)
 	{
 		if (ready)
@@ -146,6 +178,11 @@ public class PlayerCanvasHooks : MonoBehaviour
 
 		mode = ServerCanvas.mode;
 		LobbyData.CC ().currentMode = mode;
+
+		level = ServerCanvas.level;
+		LobbyData.CC ().currentLevel = level;
+
+		SetLevel (ServerCanvas.level);
 
 		SetMode ((int)ServerCanvas.mode);
 	}

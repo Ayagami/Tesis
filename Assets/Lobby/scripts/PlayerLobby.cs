@@ -86,6 +86,7 @@ public class PlayerLobby : NetworkLobbyPlayer
 		hooks.OnReadyHook = OnGUIReady;
 		hooks.OnRemoveHook = OnGUIRemove;
 		hooks.OnModeChangeHook = OnGUIChangeMode;
+		hooks.onLevelChangeHook = OnGUIChangeLevel;
 		hooks.isTheServer = isServer;
 		hooks.LobbyData = this;
 
@@ -109,6 +110,11 @@ public class PlayerLobby : NetworkLobbyPlayer
 	public void SetMode(int mode){
 		var hooks = playerCanvas.GetComponent<PlayerCanvasHooks> ();
 		hooks.SetMode (mode);
+	}
+
+	public void SetLevel(string level){
+		var hooks = playerCanvas.GetComponent<PlayerCanvasHooks> ();
+		hooks.SetLevel (level);
 	}
 
 	public void SetReady(bool ready)
@@ -158,6 +164,20 @@ public class PlayerLobby : NetworkLobbyPlayer
 	void OnGUIChangeMode(){
 		if (isLocalPlayer && isServer) {
 			cc.ServerChangeMode();
+		}
+	}
+
+	void OnGUIChangeLevel(){
+		if (isLocalPlayer && isServer) {
+			PlayerCanvasHooks PCH = playerCanvas.GetComponent<PlayerCanvasHooks>();
+			int val = PCH.dropdownLevel.value;
+
+			string res = "Default";
+			if(val != 0){
+				res = PCH.levels[val-1];
+			}
+
+			cc.ServerChangeLevel(res);
 		}
 	}
 }
