@@ -40,6 +40,8 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 			AudioListener AL = GetComponentInChildren<AudioListener> ();
 			AL.enabled = true;
+
+			Invoke ("InvokeMe", 3f);
 		}
 		GetComponent<NetworkAnimator> ().SetParameterAutoSend (0, true);
 	}
@@ -72,9 +74,25 @@ public class Player_NetworkSetup : NetworkBehaviour {
 		}
 	}
 
-	void Local(){
-
+	void InvokeMe(){
+		Vector3 resp = GameManager_References.instance.GetRandomSpawnPoint ();
+		transform.position = resp;
 	}
+
+	/*
+	[Command]
+	void CmdAskForSpawn(string id){
+		Vector3 resp = GameManager_References.instance.GetRandomSpawnPoint ();
+		RpcReturnSpawnPoint (resp.x, resp.y, resp.z, id);
+	}
+
+	[ClientRpc]
+	void RpcReturnSpawnPoint(float x, float y, float z, string id){
+		if (id == transform.name) {
+			transform.position = new Vector3(x,y,z);
+		}
+	}
+	*/
 
 	[ClientCallback]
 	void OnGUI() {

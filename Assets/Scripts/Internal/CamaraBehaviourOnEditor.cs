@@ -23,7 +23,7 @@ public class CamaraBehaviourOnEditor : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		//GetComponentInParent<Camera> ().clearFlags = CameraClearFlags.Nothing;
 	}
 
 	void FixedUpdate () {

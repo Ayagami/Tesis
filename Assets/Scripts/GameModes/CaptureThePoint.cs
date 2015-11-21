@@ -13,11 +13,13 @@ public class CaptureThePoint : NetworkBehaviour {
 
 	[SyncVar(hook="OnColorChange")]
 	private Color CurrentColor = Color.white;
-
+	
 	private Material matReference = null;
 
 	private float initial;
 
+	[SyncVar]
+	public Vector3 desiredScale = Vector3.zero;
 
 	// Use this for initialization
 	void Start () {
@@ -38,6 +40,9 @@ public class CaptureThePoint : NetworkBehaviour {
 	}
 
 	void FixedUpdate(){
+		if (desiredScale != transform.localScale)
+			transform.localScale = desiredScale;
+
 		if (!GameManager_References.ImServer () && !isServer)
 			return;
 

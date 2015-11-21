@@ -65,7 +65,7 @@ public class Gizmonizer : MonoBehaviour
 		}
 	}*/
 
-	void OnMouseDown() 
+	public void OnMouseDown() 
 	{
 		if (!gizmoObj) {
 			instance.removeGizmo();

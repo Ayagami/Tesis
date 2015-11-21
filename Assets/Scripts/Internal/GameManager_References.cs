@@ -27,13 +27,15 @@ public class GameManager_References : NetworkBehaviour {
 
 	[SyncVar]
 	public GameType mode = GameType.NORMAL;
+	[SyncVar]
+	public string level = "Default";
 
 	[SyncVar]
 	public bool GameModeSetted = false; 
 
 	[Header("References of GameModes")]
 	public GameObject flagPrefab;
-	public Flag_Base[] bases;
+	public List<Flag_Base> bases;
 
 
 	public GameObject pointPrefab;
@@ -49,10 +51,19 @@ public class GameManager_References : NetworkBehaviour {
 	public Scrollbar sbar;
 	private Image sbar_image;
 
+
+	[Header("Objects from Level editor")]
+	public GameObject[] prefabsFromLevelEditor;
+
+	//[SyncVar]
+	private List<Vector3> spawnsFromLevel;
+
 	void Awake(){
 		if(instance == null)
 			instance = this;
 		WhoWon = null;
+		spawnsFromLevel = new List<Vector3> ();
+		bases = new List<Flag_Base> ();
 	}
 
 	void Start(){
@@ -73,6 +84,44 @@ public class GameManager_References : NetworkBehaviour {
 		sbar.gameObject.SetActive (true);
 	}
 
+	void SpawnPlayersProperly(){
+		/*if (Players.Count <= 0) {
+			Invoke("SpawnPlayersProperly", 3f);
+			return;
+		}
+
+		if (spawnsFromLevel.Count <= 0) {
+			DebugConsole.Log("NO SPAWNS FOUND");
+			return;
+		}
+
+		DebugConsole.Log ("Players..." + Players.Count);
+
+		for (int i=0; i < Players.Count; i++) {
+			Players[i].transform.position = spawnsFromLevel[Random.Range(0, spawnsFromLevel.Count)];
+		}*/
+	}
+
+	/*
+	public Vector3 GetRandomSpawnPoint(){
+		if (spawnsFromLevel.Count <= 0) {
+			DebugConsole.Log("NO SPAWNS");
+			return new Vector3(0,5,0);
+		}
+
+		return spawnsFromLevel [Random.Range (0, spawnsFromLevel.Count)];
+	}*/
+
+	public Vector3 GetRandomSpawnPoint(){
+		GameObject[] Spawns = GameObject.FindGameObjectsWithTag ("PlayerSpawnPoints");
+		if (Spawns != null) {
+			if(Spawns.Length > 0)
+				return Spawns[Random.Range(0,Spawns.Length)].transform.position;
+		}
+
+		return new Vector3(0,5,0);
+	}
+
 	void Update(){
 
 		if(!isEnabled){
@@ -80,6 +129,7 @@ public class GameManager_References : NetworkBehaviour {
 				foreach(GameObject player in P){
 					Players.Add(player);
 				}
+				//SpawnPlayersProperly();
 				isEnabled = true;
 		}
 
@@ -257,7 +307,7 @@ public class GameManager_References : NetworkBehaviour {
 
 			case GameType.CAPTURE_FLAG:
 
-			for(int i=0; i < bases.Length; i++){
+			for(int i=0; i < bases.Count; i++){
 				if(bases[i].Score >= 3){	// Ese team ganó.
 					teamWon = bases[i].Team;
 					sendWhoWon();
@@ -308,6 +358,115 @@ public class GameManager_References : NetworkBehaviour {
 	public void setTeam(int team){
 		this.localTeam = team;
 	}
+
+	protected void CmdDoLevelInitialization(){
+		Level levelToLoad = null;
+
+		switch (instance.level) {
+			case "Default":
+				levelToLoad = new Level();
+				levelToLoad.LevelName = "Default";
+				levelToLoad.obj = new List<SceneObject>();	
+
+				SceneObject newObject = new SceneObject();
+				newObject.prefab = SceneTypePrefab.COLLISEUM;
+				newObject.pos = Vector3.zero;
+				newObject.scale = new Vector3(0.5638874f, 0.5638874f, 0.5638874f);
+				newObject.rot = Vector3.zero;
+				
+				levelToLoad.obj.Add(newObject);
+
+				SceneObject PointObj = new SceneObject();
+				PointObj.prefab = SceneTypePrefab.BASE_POINT;
+				PointObj.pos = new Vector3(3.749407f, 1.8f, 2.18429f);
+				PointObj.scale = new Vector3(10f, 2f, 10f);
+				PointObj.rot = Vector3.zero;
+
+				levelToLoad.obj.Add(PointObj);
+
+				SceneObject Flag1 = new SceneObject();
+				Flag1.prefab = SceneTypePrefab.BASE_FLAG;
+				Flag1.pos = new Vector3(101.58f, 1f, 4.42f);
+				Flag1.scale = new Vector3(15f, 15f, 15f);
+				Flag1.rot = Vector3.zero;
+				
+				levelToLoad.obj.Add(Flag1);
+
+				SceneObject Flag2 = new SceneObject();
+				Flag2.prefab = SceneTypePrefab.BASE_FLAG;
+				Flag2.pos = new Vector3(-96.5f, 1f, 2.77f);
+				Flag2.scale = new Vector3(15f, 15f, 15f);
+				Flag2.rot = Vector3.zero;
+				
+				levelToLoad.obj.Add(Flag2);
+
+				SceneObject Spawn1 = new SceneObject();
+				Spawn1.prefab = SceneTypePrefab.SPAWN_POINT;
+				Spawn1.pos = new Vector3(0f, 10.0f, -8.5f);
+				Spawn1.scale = new Vector3(1,1,1);
+				Spawn1.rot = Vector3.zero;
+				levelToLoad.obj.Add(Spawn1);
+					
+
+				break;
+			default:
+				levelToLoad = LevelParser.Load(instance.level);
+				break;
+		}
+
+		CmdDoLevelSpawns (levelToLoad);
+
+	}
+
+
+
+	private void CmdDoLevelSpawns(Level newLevel){
+		if (newLevel == null) {
+			DebugConsole.Log("NO LEVEL FOUND");
+			return;
+		}
+
+		for(int i=0; i < newLevel.obj.Count; i++){
+				CmdSpawnObjectFromLevel((int)newLevel.obj[i].prefab, newLevel.obj[i].pos, newLevel.obj[i].rot, newLevel.obj[i].scale);
+		}
+
+	}
+
+	void CmdSpawnObjectFromLevel(int type, Vector3 pos, Vector3 rot, Vector3 scale){
+		GameObject go = null;
+		switch ((SceneTypePrefab)type) {
+			case SceneTypePrefab.COLLISEUM:
+				go = Instantiate(prefabsFromLevelEditor[0]) as GameObject;
+				go.name = "Colliseum";
+			break;
+			case SceneTypePrefab.BASE_FLAG:
+				go = Instantiate(prefabsFromLevelEditor[1]) as GameObject;
+				//go.name = "Flag-Base";
+				bases.Add(go.GetComponent<Flag_Base>());
+				bases[bases.Count-1].desiredName = "Flag-Base " + Random.Range(0,100);
+				go.name = bases[bases.Count-1].desiredName;
+			break;
+			case SceneTypePrefab.BASE_POINT:
+				go = Instantiate(prefabsFromLevelEditor[2]) as GameObject;
+				go.name = "Point-Base";
+			break;
+			case SceneTypePrefab.SPAWN_POINT:
+				go = Instantiate(prefabsFromLevelEditor[3]) as GameObject;
+				go.name = "Spawn-Point";
+				spawnsFromLevel.Add(pos);
+			break;
+		}
+
+
+		if (go) {
+			go.transform.position = pos;
+			go.transform.rotation = Quaternion.Euler ( rot);
+			go.transform.localScale = scale;
+			go.GetComponent<SyncScaleForLevel>().desiredScale = scale;
+			NetworkServer.Spawn (go);
+		}
+
+	}
 	
 	protected void CmdDoModeInitialization(){
 		Debug.Log ("CMD");
@@ -322,26 +481,15 @@ public class GameManager_References : NetworkBehaviour {
 			break;
 
 			case GameType.CAPTURE_FLAG:
-				Debug.Log("TEST");
-				GameObject[] Bases = GameObject.FindGameObjectsWithTag("Flag_Bases");
-				DebugConsole.Log("HEY HAY... " + Bases.Length);
-				bases = new Flag_Base[Bases.Length];
-
-				for(int i=0; i < Bases.Length; i++){
-					bases[i] = Bases[i].GetComponent<Flag_Base>();
+				for(int i=0; i < bases.Count; i++){
+					DebugConsole.Log("BASE " + bases[i].desiredName);
 					bases[i].Team = i;
 					string iDFlag = "Flag_team" + i;
-					if(isServer)
-						CmdTellServerWhereToSpawnFlag(Bases[i].transform.position, Bases[i].transform.rotation.eulerAngles, Bases[i].name, i, iDFlag);
+					CmdTellServerWhereToSpawnFlag(bases[i].transform.position, bases[i].transform.rotation.eulerAngles, bases[i].desiredName, i, iDFlag);
 				}
 			break;
 
 			case GameType.CAPTURE_POINT:
-				/*if(pointBase){
-					pointBase.gameObject.SetActive(true);
-					//RpcEnablePointBase();
-				}*/
-
 				GameObject point = GameObject.FindGameObjectWithTag("PointLocation");
 				string id = "Point-" + Random.Range(0,10);
 				if(isServer){
@@ -353,15 +501,15 @@ public class GameManager_References : NetworkBehaviour {
 
 	void CmdTellServerWhereToSpawnPoint(Vector3 tPos, Vector3 tRot, string ID){
 		GameObject go = Instantiate (pointPrefab, tPos, Quaternion.Euler (tRot)) as GameObject;
+		GameObject point = GameObject.FindGameObjectWithTag("PointLocation");
+		go.transform.localScale = point.transform.localScale;
+		go.GetComponent<CaptureThePoint> ().desiredScale = point.transform.localScale;
 		go.GetComponent<Zombie_ID> ().zombieID = ID;
 		go.name = "CaptureThePoint-" + ID;
 		NetworkServer.Spawn (go);
-
 	}
-	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
 
-		Debug.Log ("Spawning " + ID);
-		DebugConsole.Log ("Spawning " + ID);
+	void CmdTellServerWhereToSpawnFlag(Vector3 tPos, Vector3 tRot, string parent, int team, string ID){
 
 		Flag_Base Base = GameObject.Find (parent).GetComponent<Flag_Base> ();
 
@@ -374,6 +522,9 @@ public class GameManager_References : NetworkBehaviour {
 		go.name = "FlagTeam-" + ID;
 
 		FC._base = Base;
+
+		DebugConsole.Log (parent);
+
 		FC.Flag_Base = parent;
 
 		FC.Team = team;
@@ -393,19 +544,18 @@ public class GameManager_References : NetworkBehaviour {
 		}
 	}
 
-	public void SetMode(GameType gameMode){
+	public void SetMode(GameType gameMode, string levelName){
 		if (GameModeSetted)
 			return;
 
 		GameModeSetted = true;
 
-		Debug.Log ("Setting Mode...");
-		Debug.Log (gameMode);
-
 		instance.mode = gameMode;
+		instance.level = levelName;
 
 		if (isServer) {
 			Debug.Log("Inside");
+			CmdDoLevelInitialization();
 			CmdDoModeInitialization ();
 		}
 

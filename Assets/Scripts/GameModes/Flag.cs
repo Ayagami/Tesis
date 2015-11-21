@@ -20,11 +20,15 @@ public class Flag : NetworkBehaviour {
 	private Color currentColor;
 	private Renderer RendererReference = null;
 
+	private Vector3 originalScale;
+	private Vector3 AloneScale = new Vector3(5,5,5);
+
 	// Use this for initialization
 	void Start () {
 		_transform = this.transform;
 		RendererReference = this.gameObject.GetComponent<Renderer> ();
 		currentColor = RendererReference.material.color;
+		originalScale = _transform.localScale;
 	}
 
 	void OnDestroy(){
@@ -49,7 +53,11 @@ public class Flag : NetworkBehaviour {
 			_transform.parent = Parent;
 			_transform.localPosition = Vector3.zero;
 			_transform.localRotation = Quaternion.identity;
+			//_transform.localScale = originalScale;
 		}
+
+		/*if (Parent == null && _transform.localScale != AloneScale)
+			_transform.localScale = AloneScale;*/
 	}
 
 	void OnTriggerEnter(Collider obj){
@@ -80,15 +88,14 @@ public class Flag : NetworkBehaviour {
 
 			ReturnToBase();
 			if(Base.Team != this.Team){
-				if(isServer)
+				if(isServer){
 					CmdAddScoreToTeamFlag(this.Team);
+				}
 			}
 		}
 	}
 
 	void ReturnToBase (){
-
-
 		Parent = null;
 		_transform.parent = Parent;
 		
@@ -98,8 +105,9 @@ public class Flag : NetworkBehaviour {
 				_base = g.GetComponent<Flag_Base>();
 		}
 		
-		if(_base)
+		if (_base) {
 			_transform.position = _base.transform.position;
+		}
 	}
 
 	public void onDieMessage(){

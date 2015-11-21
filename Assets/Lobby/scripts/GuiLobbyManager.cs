@@ -21,6 +21,7 @@ public class GuiLobbyManager : NetworkLobbyManager
 
 	private bool needToSendGameMode = false;
 	private GameManager_References.GameType gType = GameManager_References.GameType.NORMAL;
+	private string level = "Default";
 
 	void Start() {
 		s_Singleton = this;
@@ -34,7 +35,7 @@ public class GuiLobbyManager : NetworkLobbyManager
 	void FixedUpdate(){
 		if (needToSendGameMode) {
 			if(GameManager_References.instance != null){
-				GameManager_References.instance.SetMode(gType);
+				GameManager_References.instance.SetMode(gType, level);
 				needToSendGameMode = false;
 			}
 		}
@@ -70,12 +71,6 @@ public class GuiLobbyManager : NetworkLobbyManager
 
 	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
 	{
-		//This hook allows you to apply state data from the lobby-player to the game-player
-		//var cc = lobbyPlayer.GetComponent<ColorControl>();
-		//var playerX = gamePlayer.GetComponent<Player>();
-		//playerX.myColor = cc.myColor;
-
-
 		var cc = lobbyPlayer.GetComponent<ColorControl> ();
 		if ((GameManager_References.GameType)cc.currentMode != GameManager_References.GameType.NORMAL) {
 			var playerAttributes = gamePlayer.GetComponent<PlayerAttributes> ();
@@ -97,10 +92,11 @@ public class GuiLobbyManager : NetworkLobbyManager
 			GameManager_References.FindInstance();
 		}
 		if (GameManager_References.instance) {
-			GameManager_References.instance.SetMode ((GameManager_References.GameType)cc.currentMode);
+			GameManager_References.instance.SetMode ((GameManager_References.GameType)cc.currentMode, cc.currentLevel);
 		} else {
 			needToSendGameMode = true;
 			gType = (GameManager_References.GameType)cc.currentMode;
+			level = cc.currentLevel;
 		}
 		return true;
 	}

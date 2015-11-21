@@ -15,6 +15,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 	public NewLevelOnEditor newLevelHandler;
 	public PanelTransformBehaviour panelTransformHandler;
 	public PanelLoadLevelBehaviour panelLoadLevelHandler;
+	public PanelStantiatedBehaviour panelStantiatedHandler;
 
 	private List<GameObject> objectsSpawned;
 
@@ -83,6 +84,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 
 		newLevelHandler.Init (BaseMaps);
 		panelLoadLevelHandler.SetLevels (this.levels);
+		panelStantiatedHandler.Init (objectsSpawned);
 
 		for (int i=0; i < Prefabs.Length; i++) {
 			GameObject bt = GameObject.Instantiate(PrefabButton) as GameObject;
@@ -113,6 +115,13 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 		g.gizmoAxis = gizmoPrefab;
 		g.gizmoSize = 1;
 
+		panelStantiatedHandler.UpdateChildrens ();
+
+	}
+
+	public void SelectObject(int index){
+		GameObject go = objectsSpawned [index];
+		go.GetComponent<Gizmonizer> ().OnMouseDown ();
 	}
 
 	public bool CreateNewLevel(string cLevel, int baseMapRef){
@@ -128,6 +137,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 
 		RemoveOldElementsFromLevel ();
 		SpawnBaseLevel (CurrentBaseLevel);
+		panelStantiatedHandler.UpdateChildrens ();
 
 		return true;
 	}
@@ -220,6 +230,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 		if (newLevel != null) {
 			CurrentlevelName = newLevel.LevelName;
 			ParseObjectsInLevel(newLevel);
+			panelStantiatedHandler.UpdateChildrens();
 		}
 	}
 
@@ -267,6 +278,7 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 		objectsSpawned.Remove (go);
 		Destroy (go);
 
+		panelStantiatedHandler.UpdateChildrens ();
 	}
 
 	public void GoToMenu(){
