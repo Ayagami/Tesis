@@ -15,6 +15,8 @@ public enum SceneTypePrefab {
 	DEST2,
 	DEST3,
 	COLLISEUM,
+	DEST4,
+	DEST5,
 	Count
 }
 
