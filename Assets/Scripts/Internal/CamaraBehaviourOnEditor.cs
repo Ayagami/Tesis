@@ -42,7 +42,7 @@ public class CamaraBehaviourOnEditor : MonoBehaviour {
 
 	void ScrollWheelBehaviour(){
 		float scrollWheel = Input.GetAxis ("Mouse ScrollWheel");
-		transform.Translate ( transform.forward * scrollWheel );
+		transform.Translate ( Vector3.forward * scrollWheel );
 	}
 
 	void MovementBehaviour(){
