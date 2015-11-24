@@ -71,7 +71,10 @@ public class PlayerAttributes : NetworkBehaviour {
 			}
 
 			if( GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_FLAG || GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_POINT){
-				DebugConsole.Log("Invoking Alive");
+				transform.position = GameManager_References.instance.GetRandomSpawnPoint();
+				if(GameManager_References.instance.mode == GameManager_References.GameType.CAPTURE_POINT && GameManager_References.ImServer())
+					CaptureThePoint.instance.OnPlayerDie(this);
+
 				Invoke("AliveEvent", 3f);
 			}
 

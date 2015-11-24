@@ -21,6 +21,19 @@ public class CaptureThePoint : NetworkBehaviour {
 	[SyncVar]
 	public Vector3 desiredScale = Vector3.zero;
 
+	public static CaptureThePoint instance = null;
+
+	void Awake(){
+		instance = this;
+	}
+
+	public void OnPlayerDie(PlayerAttributes PA){
+		DebugConsole.Log ("CALLING ON PLAYER DIE");
+
+		if (playersInside.IndexOf (PA) != -1)
+			playersInside.Remove (PA);
+	}
+
 	// Use this for initialization
 	void Start () {
 		matReference = GetComponent<Renderer> ().sharedMaterial;
