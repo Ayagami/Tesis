@@ -58,10 +58,10 @@ public class ES2Init : MonoBehaviour
 		ES2TypeManager.types[typeof(UnityEngine.SkinnedMeshRenderer)] = new ES2_SkinnedMeshRenderer();
 		ES2TypeManager.types[typeof(System.SByte)] = new ES2_sbyte();
 		ES2TypeManager.types[typeof(Level)] = new ES2UserType_Level();
-		ES2TypeManager.types[typeof(SceneTypePrefab)] = new ES2UserType_SceneTypePrefab();
+		ES2TypeManager.types[typeof(SceneObject)] = new ES2UserType_SceneObject();
 		ES2TypeManager.types[typeof(UnityEngine.AudioClip)] = new ES2_AudioClip();
 		ES2TypeManager.types[typeof(UnityEngine.Sprite)] = new ES2_Sprite();
-		ES2TypeManager.types[typeof(SceneObject)] = new ES2UserType_SceneObject();
+		ES2TypeManager.types[typeof(SceneTypePrefab)] = new ES2UserType_SceneTypePrefab();
 
 	}
 }

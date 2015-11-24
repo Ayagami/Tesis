@@ -257,6 +257,32 @@ public class ObjectsManagersInEditor : MonoBehaviour {
 					AddPrefabObjectToScene(0);
 					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
 				break;
+
+				case SceneTypePrefab.DEST1:
+					AddPrefabObjectToScene(5);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+				break;
+
+				case SceneTypePrefab.DEST2:
+					AddPrefabObjectToScene(3);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+				break;
+
+				case SceneTypePrefab.DEST3:
+					AddPrefabObjectToScene(4);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+				break;
+
+				case SceneTypePrefab.DEST4:
+					AddPrefabObjectToScene(6);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+				break;
+
+				case SceneTypePrefab.DEST5:
+					AddPrefabObjectToScene(7);
+					AssignTransform(objectsSpawned[objectsSpawned.Count-1],theLevel.obj[i].pos,theLevel.obj[i].rot, theLevel.obj[i].scale);
+				break;
+
 			}
 		}
 	}

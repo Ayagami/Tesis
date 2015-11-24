@@ -454,6 +454,26 @@ public class GameManager_References : NetworkBehaviour {
 				go.name = "Spawn-Point";
 				spawnsFromLevel.Add(pos);
 			break;
+			case SceneTypePrefab.DEST1:
+				go = Instantiate(prefabsFromLevelEditor[4]) as GameObject;
+				go.name = prefabsFromLevelEditor[4].name;
+			break;
+			case SceneTypePrefab.DEST2:
+				go = Instantiate(prefabsFromLevelEditor[8]) as GameObject;
+				go.name = prefabsFromLevelEditor[8].name;
+			break;
+			case SceneTypePrefab.DEST3:
+				go = Instantiate(prefabsFromLevelEditor[6]) as GameObject;
+				go.name = prefabsFromLevelEditor[6].name;
+			break;
+			case SceneTypePrefab.DEST4:
+				go = Instantiate(prefabsFromLevelEditor[5]) as GameObject;
+				go.name = prefabsFromLevelEditor[5].name;
+			break;
+			case SceneTypePrefab.DEST5:
+				go = Instantiate(prefabsFromLevelEditor[7]) as GameObject;
+				go.name = prefabsFromLevelEditor[7].name;
+			break;
 		}
 
 
@@ -461,7 +481,11 @@ public class GameManager_References : NetworkBehaviour {
 			go.transform.position = pos;
 			go.transform.rotation = Quaternion.Euler (rot);
 			go.transform.localScale = scale;
-			go.GetComponent<SyncScaleForLevel>().desiredScale = scale;
+			SyncScaleForLevel SCFL = go.GetComponent<SyncScaleForLevel>();
+			SCFL.desiredScale = scale;
+			SCFL.desiredPos = pos;
+			SCFL.desiredRot = rot;
+			//go.GetComponent<SyncScaleForLevel>().desiredScale = scale;
 			NetworkServer.Spawn (go);
 		}
 
