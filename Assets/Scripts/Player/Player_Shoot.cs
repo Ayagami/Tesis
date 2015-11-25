@@ -43,6 +43,9 @@ public class Player_Shoot : NetworkBehaviour {
 			return;
 		}
 
+		if (GameManager_References.instance.isGameEnded ())
+			return;
+
 		currentCooldown += Time.deltaTime;
 		if (Input.GetKeyDown (KeyCode.F1)) {
 			cleanSpells();

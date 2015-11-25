@@ -58,12 +58,17 @@ public class GameManager_References : NetworkBehaviour {
 	//[SyncVar]
 	private List<Vector3> spawnsFromLevel;
 
+	[SyncVar]
+	public bool GameEnded = false;
+
 	void Awake(){
 		if(instance == null)
 			instance = this;
 		WhoWon = null;
 		spawnsFromLevel = new List<Vector3> ();
 		bases = new List<Flag_Base> ();
+		if (isServer)
+			GameEnded = false;
 	}
 
 	void Start(){
@@ -77,6 +82,10 @@ public class GameManager_References : NetworkBehaviour {
 			sbar_image  = sbar.GetComponent<Image>();
 		}
 
+	}
+
+	public bool isGameEnded(){
+		return this.GameEnded;
 	}
 
 	public void SetPointReference(CaptureThePoint re){
@@ -135,15 +144,21 @@ public class GameManager_References : NetworkBehaviour {
 
 		if (mode == GameType.NORMAL) {
 			if (WhoWon != null) {
+				GameEnded = true;
 				if (WhoWon.name == localPlayer) {
 					YouWin.SetActive (true);
 					YouDie.SetActive (false);
+				}
+				else{
+					YouWin.SetActive(false);
+					YouDie.SetActive(true);
 				}
 			}
 		}
 
 		if (mode == GameType.TEAM || mode == GameType.CAPTURE_FLAG || mode == GameType.CAPTURE_POINT) {	/* Should be applied on CAPTURE_FLAG, CAPTURE_POINT Too.*/
 			if(teamWon != -1 && localTeam != -1){
+				GameEnded = true;
 				if(teamWon == localTeam){
 					YouWin.SetActive(true);
 					YouDie.SetActive(false);
@@ -219,10 +234,13 @@ public class GameManager_References : NetworkBehaviour {
 
 	[ServerCallback]
 	void sendWhoWon(){
-		if (!isServer && !ImServer())
+		if (!isServer && !ImServer() && GameEnded)
 			return;
 
 		if (isServer) {
+
+			GameEnded = true;
+
 			if(mode == GameType.NORMAL)
 				RpcRecieveWhoWon (WhoWon.name);
 			else

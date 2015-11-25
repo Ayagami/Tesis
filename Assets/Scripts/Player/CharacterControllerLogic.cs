@@ -148,6 +148,10 @@ public class CharacterControllerLogic : NetworkBehaviour
 		if (!gamecam) {
 			Debug.Log("NO GAME CAM");
 		}
+
+		if (GameManager_References.instance.isGameEnded ())
+			return;
+
 		if (animator && gamecam.CamState != CamaraJugador.CamStates.FirstPerson)
 		{
 			stateInfo = animator.GetCurrentAnimatorStateInfo(0);
