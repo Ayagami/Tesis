@@ -63,16 +63,20 @@ public class Flag : NetworkBehaviour {
 	void OnTriggerEnter(Collider obj){
 		if (obj.tag == "Player") {
 			if(Parent == null){
+
 				PlayerAttributes PLA = obj.gameObject.GetComponent<PlayerAttributes>();
 
 				if(PLA && !PLA.hasFlag){
+					CancelInvoke("ReturnToBase");
+
 					Player_NetworkSetup PA = obj.gameObject.GetComponent<Player_NetworkSetup>();
 					Debug.Log(PLA.Team + " " + this.Team);
 					if(PLA.Team != this.Team){
 						Parent = PA.FlagPosition;
 						PLA.hasFlag = true;
-
-						Debug.Log("YUP");
+					}
+					else{
+						ReturnToBase();
 					}
 				}
 			}
@@ -111,7 +115,10 @@ public class Flag : NetworkBehaviour {
 	}
 
 	public void onDieMessage(){
-		ReturnToBase ();
+		Parent = null;
+		_transform.parent = Parent;
+		Invoke ("ReturnToBase", 3f);
+		//ReturnToBase ();
 	}
 
 
