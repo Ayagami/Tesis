@@ -13,6 +13,8 @@ public class Player_CameraManager : MonoBehaviour {
 
 	public Transform PlayerTarget;
 
+    public Player_NetworkSetup PNS;
+
 	void Awake(){
 		currentState = CameraState.CAMERA_MOVEMENT;
 	}
@@ -22,6 +24,8 @@ public class Player_CameraManager : MonoBehaviour {
 	}
 
 	void Update(){
+        if (!PNS || !PNS.GameStarted)
+            return;
 		if (Input.GetMouseButtonDown(2)) {
 			if(!ShouldChange){
 				ChangeState( currentState == CameraState.CAMERA_MOVEMENT ? CameraState.CAMERA_SHOOTING : CameraState.CAMERA_MOVEMENT);

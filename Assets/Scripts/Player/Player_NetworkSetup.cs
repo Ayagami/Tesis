@@ -20,6 +20,8 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 	public bool GameStarted = false;
 
+    private Vector3 spawnPos = Vector3.zero;
+    private bool spawnEnabled = false;
 	// Use this for initialization
 	public override void OnStartLocalPlayer () {
 		if (isLocalPlayer) {
@@ -34,10 +36,13 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 			Player_CameraManager PCM = GetComponentInChildren<Player_CameraManager>();
 			PCM.enabled = true;
+            PCM.PNS = this;
+
 
 			CamaraJugador cg = GetComponentInChildren<CamaraJugador> ();
 			cg.enabled = true;
 			CameraInstance = cg;
+            cg.PNS = this;
 
 			ccl.gamecam = cg;
 
@@ -79,12 +84,14 @@ public class Player_NetworkSetup : NetworkBehaviour {
 
 	void InvokeMe(){
 		Vector3 resp = GameManager_References.instance.GetRandomSpawnPoint ();
-		DebugConsole.Log ("SPAWN RETURN " + resp);
 		transform.position = resp;
+        GetComponent<Rigidbody>().position = resp;
+
+        spawnPos = resp;
+        spawnEnabled = true;
 
 		CharacterControllerLogic ccl = GetComponent<CharacterControllerLogic> ();
 		ccl.enabled = true;
-
 		GameStarted = true;
 	}
 
@@ -121,5 +128,12 @@ public class Player_NetworkSetup : NetworkBehaviour {
 				rendererReference.material.color = TeamColor;
 			}
 		}
+
+        if (spawnEnabled)
+        {
+            transform.position = spawnPos;
+            GetComponent<Rigidbody>().position = spawnPos;
+            spawnEnabled = false;
+        }
 	}
 }

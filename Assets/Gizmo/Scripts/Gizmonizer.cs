@@ -33,7 +33,7 @@ public class Gizmonizer : MonoBehaviour
 
 		if (gizmo) {
 
-			if (Input.GetKeyDown (KeyCode.Backspace)) {
+			if (Input.GetKeyDown (KeyCode.Delete)) {
 				ObjectsManagersInEditor.GetInstance().ClearCurrentObject();
 				ObjectsManagersInEditor.GetInstance().DestroyObject(this.gameObject);
 			}

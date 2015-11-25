@@ -30,6 +30,8 @@ public class CamaraJugador : MonoBehaviour {
 
 	private CamStates camState = CamStates.Free;
 
+    public Player_NetworkSetup PNS;
+
 	public CamStates CamState
 	{
 		get
@@ -60,6 +62,10 @@ public class CamaraJugador : MonoBehaviour {
 	void LateUpdate () {
 		if (CameraTarget == null)
 			return;
+
+        if (!PNS || !PNS.GameStarted)
+            return;
+
 		if (Input.GetMouseButton (1)) {/*0 mouse btn izq, 1 mouse btn der*/
 			x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
 			y += Input.GetAxis("Mouse Y") * mouseYSpeedMod;
